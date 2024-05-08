@@ -1,0 +1,12 @@
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\bin\Debug\net8.0\ProjectManagement.Core.deps.json
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\bin\Debug\net8.0\ProjectManagement.Core.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\bin\Debug\net8.0\ProjectManagement.Core.pdb
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.AssemblyInfoInputs.cache
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.AssemblyInfo.cs
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.csproj.CoreCompileInputs.cache
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\refint\ProjectManagement.Core.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.pdb
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ref\ProjectManagement.Core.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.csproj.AssemblyReference.cache
