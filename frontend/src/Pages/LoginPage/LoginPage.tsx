@@ -6,12 +6,12 @@ import { useForm } from 'react-hook-form';
 type Props = {};
 
 type LoginFormsInputs = {
-  email: string;
+  username: string;
   password: string;
 };
 
 const validation = Yup.object().shape({
-  email: Yup.string().required("Email is required"),
+  username: Yup.string().required("Username is required"),
   password: Yup.string().required("Password is required"),
 });
 
@@ -20,7 +20,7 @@ const LoginPage = (props: Props) => {
   const { register, handleSubmit, formState: {errors} } = useForm<LoginFormsInputs>({resolver: yupResolver(validation)});
   
   const handleLogin = (form: LoginFormsInputs) => {
-    loginUser(form.email, form.password);
+    loginUser(form.username, form.password);
   };
 
   return (
@@ -29,15 +29,15 @@ const LoginPage = (props: Props) => {
         <h1> Sign in to your account </h1>
         <form onSubmit={handleSubmit(handleLogin)}>
           <div>
-            <label htmlFor="email" > Email </label>
+            <label htmlFor="username" > Username </label>
             <input
               type="text"
-              id="email"
-              placeholder="Email"
-              {...register("email")}
+              id="username"
+              placeholder="username"
+              {...register("username")}
             />
-            {errors.email ? (
-              <p>{errors.email.message}</p>
+            {errors.username ? (
+              <p>{errors.username.message}</p>
             ) : (
               ""
             )}

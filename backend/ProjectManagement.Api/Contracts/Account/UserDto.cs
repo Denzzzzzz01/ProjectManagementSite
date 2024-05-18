@@ -1,4 +1,4 @@
-﻿namespace ProjectManagement.Api.Contracts.DTOs.Account;
+﻿namespace ProjectManagement.Api.Contracts.Account;
 
 public class UserDto
 {

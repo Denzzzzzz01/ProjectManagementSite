@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectManagement.Api.Contracts.DTOs.Account;
+namespace ProjectManagement.Api.Contracts.Account;
 
 public class LoginDto
 {
@@ -8,6 +8,6 @@ public class LoginDto
     [EmailAddress]
     public string Email { get; set; }
 
-    [Required] 
+    [Required]
     public string Password { get; set; }
 }

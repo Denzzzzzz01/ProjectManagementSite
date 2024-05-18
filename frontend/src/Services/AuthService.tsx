@@ -4,10 +4,10 @@ import { UserProfileToken } from "../Models/User";
 
 const api = "http://localhost:5211/";
 
-export const loginAPI = async (email: string, password: string) => {
+export const loginAPI = async (username: string, password: string) => {
   try {
     const data = await axios.post<UserProfileToken>(api + "account/login", {
-      email: email,
+      username: username,
       password: password,
     });
     return data; 

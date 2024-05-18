@@ -13,3 +13,4 @@ D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Application\bin\
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Application\bin\Debug\net8.0\ProjectManagement.Core.pdb
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Application\obj\Debug\net8.0\ProjectManagement.Application.csproj.AssemblyReference.cache
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Application\obj\Debug\net8.0\ProjectManagement.Application.csproj.CopyComplete
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Application\obj\Debug\net8.0\ProjectManagement.Application.sourcelink.json

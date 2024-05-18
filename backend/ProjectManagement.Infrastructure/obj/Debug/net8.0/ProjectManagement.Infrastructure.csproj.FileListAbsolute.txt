@@ -17,3 +17,4 @@ D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Infrastructure\o
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Infrastructure\obj\Debug\net8.0\ref\ProjectManagement.Infrastructure.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Infrastructure\bin\Debug\net8.0\ProjectManagement.Application.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Infrastructure\bin\Debug\net8.0\ProjectManagement.Application.pdb
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Infrastructure\obj\Debug\net8.0\ProjectManagement.Infrastructure.sourcelink.json

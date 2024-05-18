@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectManagement.Api.Contracts.DTOs.Account;
+namespace ProjectManagement.Api.Contracts.Account;
 
 public class RegisterDto
 {
@@ -9,7 +9,7 @@ public class RegisterDto
 
     [Required]
     [EmailAddress]
-    public string? Email { get; set; }  
+    public string? Email { get; set; }
 
     [Required]
     public string? Password { get; set; }

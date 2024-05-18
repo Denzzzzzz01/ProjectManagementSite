@@ -10,3 +10,4 @@ D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\n
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.pdb
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ref\ProjectManagement.Core.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.csproj.AssemblyReference.cache
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Core\obj\Debug\net8.0\ProjectManagement.Core.sourcelink.json

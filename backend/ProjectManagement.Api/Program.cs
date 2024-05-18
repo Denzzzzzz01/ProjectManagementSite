@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProjectManagement.Application.Interfaces;
+using ProjectManagement.Application.Services;
 using ProjectManagement.Core.Models;
 using ProjectManagement.Infrastructure.Persistence;
 using ProjectManagement.Infrastructure.Services;
@@ -15,16 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen(options =>
-//{
-//    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-//    {
-//        In = ParameterLocation.Header,
-//        Name = "Authorization",
-//        Type = SecuritySchemeType.ApiKey
-//    });
-//    options.OperationFilter<SecurityRequirementsOperationFilter>();
-//});
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -59,29 +50,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     b => b.MigrationsAssembly("ProjectManagement.Infrastructure"));
 });
 
-//builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
-//builder.Services.AddAuthorizationBuilder() ;
-//builder.Services.AddIdentityCore<AppUser>()
-//    .AddEntityFrameworkStores<AppDbContext>()
-//   .AddApiEndpoints();
-
-//builder.Services.Configure<IdentityOptions>(options =>
-//{
-//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-//    options.Lockout.MaxFailedAccessAttempts = 10;
-//    options.Lockout.AllowedForNewUsers = true;
-
-//    options.Password.RequiredLength = 5;
-//    options.Password.RequireLowercase = false;
-//    options.Password.RequireDigit = false;
-//    options.Password.RequireUppercase = false;
-//    options.Password.RequireNonAlphanumeric = false;
-//    options.Password.RequireNonAlphanumeric = false;
-
-//    options.User.RequireUniqueEmail = false;
-//});
-
-builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
 {
     //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     //options.Lockout.MaxFailedAccessAttempts = 10;
@@ -112,7 +81,7 @@ builder.Services.AddAuthentication(options =>
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["JWT:Issuer"], // DO LATER !
+            ValidIssuer = builder.Configuration["JWT:Issuer"], 
             ValidateAudience = true,
             ValidAudience = builder.Configuration["JWT:Audience"],
             ValidateIssuerSigningKey = true,
@@ -122,6 +91,8 @@ builder.Services.AddAuthentication(options =>
 
 
 builder.Services.AddScoped<ITokenService, TokenSerive>();
+builder.Services.AddScoped<IAppDbContext, AppDbContext>();
+builder.Services.AddScoped<ProjectService>();
 
 var app = builder.Build();
 
@@ -131,17 +102,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.MapIdentityApi<AppUser>();
-
 
 app.UseHttpsRedirection();
-
-//app.UseCors(x => x
-//     .AllowAnyMethod()
-//     .AllowAnyHeader()
-//     .AllowCredentials()
-//      //.WithOrigins("https://localhost:44351))
-//      .SetIsOriginAllowed(origin => true));
 
 app.UseCors(x =>
 {
