@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ProjectManagement.Api.Contracts.Project;
-using ProjectManagement.Api.Extensions;
+using ProjectManagement.Application.Contracts.Project;
 using ProjectManagement.Application.Services;
 using ProjectManagement.Core.Enums;
 using ProjectManagement.Core.Models;
@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace ProjectManagement.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")] 
 public class ProjectController : ControllerBase
@@ -25,43 +26,24 @@ public class ProjectController : ControllerBase
     [HttpGet(nameof(GetUserProjects))]
     public async Task<ActionResult<List<Project>>> GetUserProjects(CancellationToken ct)
     {
-        var username = User.GetUsername();
-        if (username is null)
-            return Unauthorized();
-        var appUser = await _userManager.FindByNameAsync(username);
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        var appUser = await _userManager.FindByEmailAsync(userEmail!);
         if (appUser is null)
             return Unauthorized();
 
-        var projects = await _projectService.GetUserProjects(ct);
+        var projects = await _projectService.GetUserProjects(appUser, ct);
         return Ok(projects);
     }
 
     [HttpPost(nameof(CreateProject))]
-    public async Task<ActionResult<Guid>> CreateProject([FromBody] ProjectDto projectDto, CancellationToken ct)
+    public async Task<ActionResult<Guid>> CreateProject([FromBody] CreateProjectDto projectDto, CancellationToken ct)
     {
         var userEmail = User.FindFirstValue(ClaimTypes.Email);
-        if (userEmail is null)
-            return Unauthorized();
-        var appUser = await _userManager.FindByEmailAsync(userEmail);
+        var appUser = await _userManager.FindByEmailAsync(userEmail!);
         if (appUser is null)
             return Unauthorized();
-        
 
-        var project = new Project
-        {
-            Id = Guid.NewGuid(),
-            //Users = new List<AppUser>() { appUser },
-            CreatedTime = DateTime.UtcNow,
-            Tasks = new List<ProjectTask>(),
-            Status = Status.InProgress,
-
-            //Owner = appUser,
-            Name = projectDto.Name,
-
-        };
-
-
-        var id = await _projectService.CreateProject(project, appUser, ct);
+        var id = await _projectService.CreateProject(projectDto, appUser, ct);
 
         return Ok(id);
     }

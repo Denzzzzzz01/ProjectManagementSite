@@ -5,7 +5,7 @@ namespace ProjectManagement.Core.Models;
 public class Project
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    //public AppUser Owner { get; set; }
+    public Guid OwnerId { get; set; }
     public List<AppUserProject> AppUserProjects { get; set; } = new List<AppUserProject>();
 
     public DateTime CreatedTime {  get; set; } = DateTime.UtcNow;  

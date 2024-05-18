@@ -51,13 +51,13 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4800e40f-e7ef-47f6-9bba-f944db134678"),
+                            Id = new Guid("a5eb87f4-a1a2-4007-8a53-5e00aac79364"),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("2668a551-86e8-4872-a61d-5be028f0de87"),
+                            Id = new Guid("eec0105b-54a6-47ad-b326-42d919036fa0"),
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -252,6 +252,9 @@ namespace ProjectManagement.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -259,10 +262,15 @@ namespace ProjectManagement.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Projects");
                 });
@@ -379,6 +387,13 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ProjectManagement.Core.Models.Project", b =>
+                {
+                    b.HasOne("ProjectManagement.Core.Models.AppUser", null)
+                        .WithMany("OwnedProjects")
+                        .HasForeignKey("AppUserId");
+                });
+
             modelBuilder.Entity("ProjectManagement.Core.Models.ProjectTask", b =>
                 {
                     b.HasOne("ProjectManagement.Core.Models.Project", "Project")
@@ -393,6 +408,8 @@ namespace ProjectManagement.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManagement.Core.Models.AppUser", b =>
                 {
                     b.Navigation("AppUserProjects");
+
+                    b.Navigation("OwnedProjects");
                 });
 
             modelBuilder.Entity("ProjectManagement.Core.Models.Project", b =>

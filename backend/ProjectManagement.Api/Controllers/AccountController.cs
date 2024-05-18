@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagement.Api.Contracts.Account;
+using ProjectManagement.Application.Contracts.Account;
 using ProjectManagement.Application.Interfaces;
 using ProjectManagement.Core.Models;
 
