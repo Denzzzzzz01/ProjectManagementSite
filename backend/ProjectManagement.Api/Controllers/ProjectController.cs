@@ -47,4 +47,40 @@ public class ProjectController : ControllerBase
 
         return Ok(id);
     }
+
+    [HttpPut(nameof(UpdateProject))]
+    public async Task<ActionResult<Guid>> UpdateProject([FromBody]  UpdateProjectDto projectDto, CancellationToken ct)
+    {
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        var appUser = await _userManager.FindByEmailAsync(userEmail!);
+        if (appUser is null)
+            return Unauthorized();
+
+        var projectId = await _projectService.UpdateProject(projectDto, appUser, ct);
+        return Ok(projectId);   
+    }
+
+    [HttpPut(nameof(UpdateProjectStaus))]
+    public async Task<ActionResult<Guid>> UpdateProjectStaus([FromBody] UpdateProjectStatusDto projectDto, CancellationToken ct)
+    {
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        var appUser = await _userManager.FindByEmailAsync(userEmail!);
+        if (appUser is null)
+            return Unauthorized();
+
+        var projectId = await _projectService.UpdateProjectStatus(projectDto, appUser, ct);
+        return Ok(projectId);
+    }
+
+    [HttpDelete(nameof(DeleteProject))]
+    public async Task<ActionResult> DeleteProject(Guid ProjectId, CancellationToken ct)
+    {
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        var appUser = await _userManager.FindByEmailAsync(userEmail!);
+        if (appUser is null)
+            return Unauthorized();
+
+        await _projectService.DeleteProject(ProjectId, appUser, ct);
+        return Ok();
+    }
 }

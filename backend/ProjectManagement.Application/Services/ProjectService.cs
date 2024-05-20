@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Application.Contracts.Project;
-using ProjectManagement.Application.Exceptions;
 using ProjectManagement.Application.Interfaces;
 using ProjectManagement.Core.Enums;
 using ProjectManagement.Core.Models;

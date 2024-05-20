@@ -10,8 +10,8 @@ public class TasksConfiguration : IEntityTypeConfiguration<ProjectTask>
     {
         builder.HasKey(t => t.Id);
 
-        builder
-            .HasOne(t => t.Project)
-            .WithMany(p => p.Tasks);
+        //builder
+        //    .HasOne(t => t.Project)
+        //    .WithMany(p => p.Tasks);
     }
 }
