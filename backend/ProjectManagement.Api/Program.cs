@@ -8,7 +8,6 @@ using ProjectManagement.Application.Services;
 using ProjectManagement.Core.Models;
 using ProjectManagement.Infrastructure.Persistence;
 using ProjectManagement.Infrastructure.Services;
-using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -93,6 +92,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<ITokenService, TokenSerive>();
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 builder.Services.AddScoped<ProjectService>();
+builder.Services.AddScoped<TaskService>();
 
 var app = builder.Build();
 

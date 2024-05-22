@@ -40,7 +40,7 @@ public class ProjectService
     //}
 
 
-    public async Task<Guid> CreateProject(CreateProjectDto projectDto, AppUser appUser, CancellationToken ct = default)
+    public async Task<Project> CreateProject(CreateProjectDto projectDto, AppUser appUser, CancellationToken ct = default)
     {
         var project = new Project
         {
@@ -65,7 +65,7 @@ public class ProjectService
 
         await _dbContext.Projects.AddAsync(project, ct);
         await _dbContext.SaveChangesAsync(ct);
-        return project.Id;
+        return project;
     }
 
     public async Task<Guid> UpdateProject(UpdateProjectDto projectDto, AppUser appUser, CancellationToken ct = default)

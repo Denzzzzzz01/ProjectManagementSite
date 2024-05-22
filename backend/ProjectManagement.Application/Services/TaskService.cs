@@ -17,22 +17,22 @@ public class TaskService
 
     public async Task<List<ProjectTask>> GetProjectTasks(Guid projectId, AppUser appUser, CancellationToken ct = default)
     {
-        var tasks = await _dbContext.Projects
-            .Where(p => p.Id == projectId && p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id))
-            .SelectMany(p => p.Tasks)
+        var project = await _dbContext.Projects
             .AsNoTracking()
-            .OrderBy(t => t.AddedTime)
-            .ToListAsync(ct);
+            .Include(p => p.Tasks) 
+            .FirstOrDefaultAsync(p => p.Id == projectId && p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id), ct);
 
-        if (!tasks.Any())
+        if (project is null)
             throw new NotFoundException(nameof(Project), projectId);
 
+        var tasks = project.Tasks.OrderBy(t => t.AddedTime).ToList();
         return tasks;
     }
 
-    public async Task<Guid> AddTask(AddTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
+    public async Task<ProjectTask> AddTask(AddTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
         var projectExists = await _dbContext.Projects
+            .AsNoTracking()
             .AnyAsync(p => p.Id == taskDto.ProjectId && p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id), ct);
 
         if (!projectExists)
@@ -55,7 +55,7 @@ public class TaskService
 
         await _dbContext.Tasks.AddAsync(task, ct);
         await _dbContext.SaveChangesAsync(ct);
-        return task.Id;
+        return task;
     }
 
 
@@ -99,7 +99,7 @@ public class TaskService
         return taskDto.TaskId;
     }
 
-    public async Task DeleteTask(DeleteTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
+    public async Task RemoveTask(RemoveTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
         var rowsAffected = await _dbContext.Tasks
             .Where(t => t.Id == taskDto.TaskId && t.ProjectId == taskDto.ProjectId)

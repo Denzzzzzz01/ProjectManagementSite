@@ -51,13 +51,13 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a5eb87f4-a1a2-4007-8a53-5e00aac79364"),
+                            Id = new Guid("29cb6d53-c871-42c1-ba04-5a7bdc934eac"),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("eec0105b-54a6-47ad-b326-42d919036fa0"),
+                            Id = new Guid("ebb5b1be-d8c6-4b67-9fdc-99fc914d05f5"),
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -252,9 +252,6 @@ namespace ProjectManagement.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -269,8 +266,6 @@ namespace ProjectManagement.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("Projects");
                 });
@@ -300,15 +295,15 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.Property<bool>("IsDone")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("priority")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -387,29 +382,18 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectManagement.Core.Models.Project", b =>
-                {
-                    b.HasOne("ProjectManagement.Core.Models.AppUser", null)
-                        .WithMany("OwnedProjects")
-                        .HasForeignKey("AppUserId");
-                });
-
             modelBuilder.Entity("ProjectManagement.Core.Models.ProjectTask", b =>
                 {
-                    b.HasOne("ProjectManagement.Core.Models.Project", "Project")
+                    b.HasOne("ProjectManagement.Core.Models.Project", null)
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("ProjectManagement.Core.Models.AppUser", b =>
                 {
                     b.Navigation("AppUserProjects");
-
-                    b.Navigation("OwnedProjects");
                 });
 
             modelBuilder.Entity("ProjectManagement.Core.Models.Project", b =>

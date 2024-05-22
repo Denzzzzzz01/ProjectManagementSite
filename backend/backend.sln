@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.Api", "ProjectManagement.Api\ProjectManagement.Api.csproj", "{F36AAAFD-D809-4732-9CAA-0F4528631A27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.Api", "ProjectManagement.Api\ProjectManagement.Api.csproj", "{F36AAAFD-D809-4732-9CAA-0F4528631A27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.Core", "ProjectManagement.Core\ProjectManagement.Core.csproj", "{F60DCF6F-A4B1-49B3-89F7-164D045EEE43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.Core", "ProjectManagement.Core\ProjectManagement.Core.csproj", "{F60DCF6F-A4B1-49B3-89F7-164D045EEE43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.Application", "ProjectManagement.Application\ProjectManagement.Application.csproj", "{F2434631-1B23-4751-9F5C-C10305A7647F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.Application", "ProjectManagement.Application\ProjectManagement.Application.csproj", "{F2434631-1B23-4751-9F5C-C10305A7647F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.Infrastructure", "ProjectManagement.Infrastructure\ProjectManagement.Infrastructure.csproj", "{B31C0858-1E5A-4657-B579-354A5573C9FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.Infrastructure", "ProjectManagement.Infrastructure\ProjectManagement.Infrastructure.csproj", "{B31C0858-1E5A-4657-B579-354A5573C9FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
