@@ -16,19 +16,16 @@ public class TaskController : BaseController
     }
 
 
-    [HttpGet(nameof(GetProjectTasks))]
-    public async Task<ActionResult<List<ProjectTask>>> GetProjectTasks(Guid projectId, CancellationToken ct)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var appUser = await GetCurrentUserAsync();
-        var tasks = await _taskService.GetProjectTasks(projectId, appUser, ct);
-        return Ok(tasks);
-    }
+    //[HttpGet(nameof(GetProjectTasks))]
+    //public async Task<ActionResult<List<TaskVm>>> GetProjectTasks(Guid projectId, CancellationToken ct)
+    //{
+    //    var appUser = await GetCurrentUserAsync();
+    //    var tasks = await _taskService.GetProjectTasks(projectId, appUser, ct);
+    //    return Ok(tasks);
+    //}
 
     [HttpPost(nameof(AddTask))]
-    public async Task<ActionResult<ProjectTask>> AddTask([FromBody] AddTaskDto taskDto, CancellationToken ct)
+    public async Task<ActionResult<TaskDetailedVm>> AddTask([FromBody] AddTaskDto taskDto, CancellationToken ct)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

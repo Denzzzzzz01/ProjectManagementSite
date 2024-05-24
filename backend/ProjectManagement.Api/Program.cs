@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProjectManagement.Application.Interfaces;
+using ProjectManagement.Application.Mapper;
 using ProjectManagement.Application.Services;
 using ProjectManagement.Core.Models;
 using ProjectManagement.Infrastructure.Persistence;
@@ -89,6 +90,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 
+MapsterConfiguration.Configure();
 builder.Services.AddScoped<ITokenService, TokenSerive>();
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 builder.Services.AddScoped<ProjectService>();

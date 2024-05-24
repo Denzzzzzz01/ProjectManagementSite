@@ -1,6 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Application.Contracts.Project;
+using ProjectManagement.Application.Contracts.Task;
+using ProjectManagement.Application.Exceptions;
 using ProjectManagement.Application.Interfaces;
+using ProjectManagement.Application.Mapper;
 using ProjectManagement.Core.Enums;
 using ProjectManagement.Core.Models;
 
@@ -15,7 +19,7 @@ public class ProjectService
         _dbContext = dbContext;
     }
 
-    public async Task<List<Project>> GetUserProjects(AppUser appUser, CancellationToken ct = default)
+    public async Task<List<ProjectVm>> GetUserProjects(AppUser appUser, CancellationToken ct = default)
     {
         var projects = await _dbContext.Projects
             .AsNoTracking()
@@ -23,24 +27,27 @@ public class ProjectService
             .OrderBy(p => p.Name)
             .ToListAsync(ct);
 
-        return projects;
+        var projectsVm = projects.Adapt<List<ProjectVm>>();
+        return projectsVm;
     }
 
-    //public async Task<Project> GetProjectById(Guid id, AppUser appUser, CancellationToken ct = default)
-    //{
-    //    var project = await _dbContext.Projects
-    //        .AsNoTracking()
-    //        .Where(p => p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id))
-    //        .FirstOrDefaultAsync(p => p.Id == id);
+    public async Task<ProjectDetailedVm> GetProjectById(Guid id, AppUser appUser, CancellationToken ct = default)
+    {
+        var project = await _dbContext.Projects
+        .AsNoTracking()
+        .Where(p => p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id))
+        .Include(p => p.Tasks)
+        .FirstOrDefaultAsync(p => p.Id == id, ct);
 
-    //    if (project is null)
-    //        throw new NotFoundException(nameof(Project), id);
+        if (project is null)
+            throw new NotFoundException(nameof(Project), id);
 
-    //    return project;
-    //}
+        var projectVm = project.Adapt<ProjectDetailedVm>();
+        return projectVm;
+    }
 
 
-    public async Task<Project> CreateProject(CreateProjectDto projectDto, AppUser appUser, CancellationToken ct = default)
+    public async Task<ProjectDetailedVm> CreateProject(CreateProjectDto projectDto, AppUser appUser, CancellationToken ct = default)
     {
         var project = new Project
         {
@@ -65,7 +72,8 @@ public class ProjectService
 
         await _dbContext.Projects.AddAsync(project, ct);
         await _dbContext.SaveChangesAsync(ct);
-        return project;
+        var projectVm = project.Adapt<ProjectDetailedVm>();
+        return projectVm;
     }
 
     public async Task<Guid> UpdateProject(UpdateProjectDto projectDto, AppUser appUser, CancellationToken ct = default)

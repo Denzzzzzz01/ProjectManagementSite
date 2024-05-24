@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Application.Contracts.Task;
 using ProjectManagement.Application.Exceptions;
 using ProjectManagement.Application.Interfaces;
@@ -15,7 +16,7 @@ public class TaskService
         _dbContext = dbContext;
     }
 
-    public async Task<List<ProjectTask>> GetProjectTasks(Guid projectId, AppUser appUser, CancellationToken ct = default)
+    public async Task<List<TaskVm>> GetProjectTasks(Guid projectId, AppUser appUser, CancellationToken ct = default)
     {
         var project = await _dbContext.Projects
             .AsNoTracking()
@@ -26,10 +27,11 @@ public class TaskService
             throw new NotFoundException(nameof(Project), projectId);
 
         var tasks = project.Tasks.OrderBy(t => t.AddedTime).ToList();
-        return tasks;
+        var tasksVm = tasks.Adapt<List<TaskVm>>();
+        return tasksVm;
     }
 
-    public async Task<ProjectTask> AddTask(AddTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
+    public async Task<TaskDetailedVm> AddTask(AddTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
         var projectExists = await _dbContext.Projects
             .AsNoTracking()
@@ -55,7 +57,9 @@ public class TaskService
 
         await _dbContext.Tasks.AddAsync(task, ct);
         await _dbContext.SaveChangesAsync(ct);
-        return task;
+
+        var taskVm = task.Adapt<TaskDetailedVm>();
+        return taskVm;
     }
 
 

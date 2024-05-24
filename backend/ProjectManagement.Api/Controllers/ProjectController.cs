@@ -16,25 +16,30 @@ public class ProjectController : BaseController
     }
 
     [HttpGet(nameof(GetUserProjects))]
-    public async Task<ActionResult<List<Project>>> GetUserProjects(CancellationToken ct)
+    public async Task<ActionResult<List<ProjectVm>>> GetUserProjects(CancellationToken ct)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var appUser = await GetCurrentUserAsync();
         var projects = await _projectService.GetUserProjects(appUser, ct);
         return Ok(projects);
     }
 
+    
+    [HttpGet(nameof(GetProjectById))]
+    public async Task<ActionResult<ProjectDetailedVm>> GetProjectById(Guid projectId, CancellationToken ct)
+    {
+        var appUser = await GetCurrentUserAsync();
+        var project = await _projectService.GetProjectById(projectId, appUser, ct);
+        return project;
+    }
+
     [HttpPost(nameof(CreateProject))]
-    public async Task<ActionResult<Project>> CreateProject([FromBody] CreateProjectDto projectDto, CancellationToken ct)
+    public async Task<ActionResult<ProjectDetailedVm>> CreateProject([FromBody] CreateProjectDto projectDto, CancellationToken ct)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         var appUser = await GetCurrentUserAsync();
         var project = await _projectService.CreateProject(projectDto, appUser, ct);
-
         return CreatedAtAction(nameof(CreateProject), project);
     }
 
@@ -63,9 +68,6 @@ public class ProjectController : BaseController
     [HttpDelete(nameof(DeleteProject))]
     public async Task<IActionResult> DeleteProject(Guid ProjectId, CancellationToken ct)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var appUser = await GetCurrentUserAsync();
         await _projectService.DeleteProject(ProjectId, appUser, ct);
         return Ok();
