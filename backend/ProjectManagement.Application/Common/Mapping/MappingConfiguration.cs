@@ -3,9 +3,9 @@ using ProjectManagement.Application.Contracts.Project;
 using ProjectManagement.Application.Contracts.Task;
 using ProjectManagement.Core.Models;
 
-namespace ProjectManagement.Application.Mapper;
+namespace ProjectManagement.Application.Common.Mapping;
 
-public static class MapsterConfiguration
+public static class MappingConfiguration
 {
     public static void Configure()
     {

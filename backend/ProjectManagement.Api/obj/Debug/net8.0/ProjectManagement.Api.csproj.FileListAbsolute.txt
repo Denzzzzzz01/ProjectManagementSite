@@ -128,3 +128,6 @@ D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\ne
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\obj\Debug\net8.0\ProjectManagement.Api.sourcelink.json
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Mapster.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Mapster.Core.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\FluentValidation.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll

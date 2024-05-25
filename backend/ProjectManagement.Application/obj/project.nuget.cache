@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "450398ey2ZsxVHZMD8O2j8bOCkXyzbLK4Q9Nr4h37adG+bG0txJYEZIDBPBS+NAyZc6VRAEMyZwILFvEHMaOwg==",
+  "dgSpecHash": "FOvxSmqhAEdslfnyK9h57KVgWu1zGXgoNa7I9o7HXccqsuZ8e0FnY+lO2hy1X6hfUe8/KXlW/tfpZFWA1vixeg==",
   "success": true,
   "projectFilePath": "D:\\_Programming\\ProjectManagementSite\\backend\\ProjectManagement.Application\\ProjectManagement.Application.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\desie\\.nuget\\packages\\fluentvalidation\\11.5.1\\fluentvalidation.11.5.1.nupkg.sha512",
+    "C:\\Users\\desie\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\desie\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "C:\\Users\\desie\\.nuget\\packages\\mapster\\7.4.0\\mapster.7.4.0.nupkg.sha512",
     "C:\\Users\\desie\\.nuget\\packages\\mapster.core\\1.2.1\\mapster.core.1.2.1.nupkg.sha512",
     "C:\\Users\\desie\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\8.0.4\\microsoft.aspnetcore.cryptography.internal.8.0.4.nupkg.sha512",

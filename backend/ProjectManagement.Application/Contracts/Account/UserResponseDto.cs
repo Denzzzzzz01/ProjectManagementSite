@@ -1,6 +1,6 @@
 ﻿namespace ProjectManagement.Application.Contracts.Account;
 
-public class UserDto
+public class UserResponseDto
 {
     public string Username { get; set; }
     public string Email { get; set; }

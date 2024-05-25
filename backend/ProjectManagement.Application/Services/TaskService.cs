@@ -1,7 +1,7 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Application.Contracts.Task;
-using ProjectManagement.Application.Exceptions;
+using ProjectManagement.Application.Common.Exceptions;
 using ProjectManagement.Application.Interfaces;
 using ProjectManagement.Core.Models;
 

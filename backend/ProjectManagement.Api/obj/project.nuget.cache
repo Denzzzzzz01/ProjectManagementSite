@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "VHC8Y3tuiilxg9LQrxZ1ylKFiB1m4DDUwgmyibhTjfELnZ0C7jVhLbPvcbC19yvCqHZIArxN8K/Z3YIBlOKCkg==",
+  "dgSpecHash": "M1Izjs6gBO7e9WV6WGnL7MgFOdfeFWTQqY0YWPIvMmELMBTw+Aa5/2yv16DPYItn+9uMvYFO6NlYAEkpyWKJvw==",
   "success": true,
   "projectFilePath": "D:\\_Programming\\ProjectManagementSite\\backend\\ProjectManagement.Api\\ProjectManagement.Api.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\desie\\.nuget\\packages\\fluentvalidation\\11.5.1\\fluentvalidation.11.5.1.nupkg.sha512",
+    "C:\\Users\\desie\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\desie\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "C:\\Users\\desie\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\desie\\.nuget\\packages\\mapster\\7.4.0\\mapster.7.4.0.nupkg.sha512",
     "C:\\Users\\desie\\.nuget\\packages\\mapster.core\\1.2.1\\mapster.core.1.2.1.nupkg.sha512",

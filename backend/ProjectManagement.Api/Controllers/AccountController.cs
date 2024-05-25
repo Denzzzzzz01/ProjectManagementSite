@@ -42,7 +42,7 @@ public class AccountController : ControllerBase
                 var roleResult = await _userManager.AddToRoleAsync(user, "User");
                 if (roleResult.Succeeded)
                     return Ok(
-                        new UserDto
+                        new UserResponseDto
                         {
                             Username = user.UserName,
                             Email = user.Email,
@@ -78,7 +78,7 @@ public class AccountController : ControllerBase
             return Unauthorized("User not found and/or incorrect password");
 
         return Ok(
-            new UserDto
+            new UserResponseDto
             {
                 Username = user.UserName,
                 Email = user.Email,

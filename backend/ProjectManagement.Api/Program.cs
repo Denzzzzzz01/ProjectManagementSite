@@ -1,10 +1,12 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ProjectManagement.Application.Common.Mapping;
+using ProjectManagement.Application.Common.Validators;
 using ProjectManagement.Application.Interfaces;
-using ProjectManagement.Application.Mapper;
 using ProjectManagement.Application.Services;
 using ProjectManagement.Core.Models;
 using ProjectManagement.Infrastructure.Persistence;
@@ -90,7 +92,10 @@ builder.Services.AddAuthentication(options =>
     });
 
 
-MapsterConfiguration.Configure();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidators();
+
+MappingConfiguration.Configure();
 builder.Services.AddScoped<ITokenService, TokenSerive>();
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 builder.Services.AddScoped<ProjectService>();
