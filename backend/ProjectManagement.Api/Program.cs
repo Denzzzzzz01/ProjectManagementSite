@@ -11,6 +11,7 @@ using ProjectManagement.Application.Services;
 using ProjectManagement.Core.Models;
 using ProjectManagement.Infrastructure.Persistence;
 using ProjectManagement.Infrastructure.Services;
+using Serilog;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,7 +50,9 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    b => b.MigrationsAssembly("ProjectManagement.Infrastructure"));
+    b => b.MigrationsAssembly("ProjectManagement.Infrastructure"))
+    .EnableSensitiveDataLogging()
+    .LogTo(Console.WriteLine, LogLevel.Information);
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
@@ -91,6 +94,9 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
+
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidators();
@@ -109,6 +115,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 

@@ -4,41 +4,55 @@ using ProjectManagement.Application.Contracts.Task;
 using ProjectManagement.Application.Common.Exceptions;
 using ProjectManagement.Application.Interfaces;
 using ProjectManagement.Core.Models;
+using Microsoft.Extensions.Logging;
 
 namespace ProjectManagement.Application.Services;
 
 public class TaskService
 {
     private readonly IAppDbContext _dbContext;
+    private readonly ILogger<TaskService> _logger;
 
-    public TaskService(IAppDbContext dbContext)
+    public TaskService(IAppDbContext dbContext, ILogger<TaskService> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     public async Task<List<TaskVm>> GetProjectTasks(Guid projectId, AppUser appUser, CancellationToken ct = default)
     {
+        _logger.LogInformation("Fetching tasks for project {ProjectId} and user {UserId}", projectId, appUser.Id);
+
         var project = await _dbContext.Projects
             .AsNoTracking()
-            .Include(p => p.Tasks) 
+            .Include(p => p.Tasks)
             .FirstOrDefaultAsync(p => p.Id == projectId && p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id), ct);
 
         if (project is null)
+        {
+            _logger.LogWarning("Project {ProjectId} not found for user {UserId}", projectId, appUser.Id);
             throw new NotFoundException(nameof(Project), projectId);
+        }
 
         var tasks = project.Tasks.OrderBy(t => t.AddedTime).ToList();
         var tasksVm = tasks.Adapt<List<TaskVm>>();
+        _logger.LogInformation("Fetched {TaskCount} tasks for project {ProjectId} and user {UserId}", tasksVm.Count, projectId, appUser.Id);
         return tasksVm;
     }
 
     public async Task<TaskDetailedVm> AddTask(AddTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
+        _logger.LogInformation("Adding task to project {ProjectId} for user {UserId}", taskDto.ProjectId, appUser.Id);
+
         var projectExists = await _dbContext.Projects
             .AsNoTracking()
             .AnyAsync(p => p.Id == taskDto.ProjectId && p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id), ct);
 
         if (!projectExists)
+        {
+            _logger.LogWarning("Project {ProjectId} not found for user {UserId}", taskDto.ProjectId, appUser.Id);
             throw new NotFoundException(nameof(Project), taskDto.ProjectId);
+        }
 
         var task = new ProjectTask
         {
@@ -59,12 +73,14 @@ public class TaskService
         await _dbContext.SaveChangesAsync(ct);
 
         var taskVm = task.Adapt<TaskDetailedVm>();
+        _logger.LogInformation("Added task {TaskId} to project {ProjectId} for user {UserId}", taskVm.Id, taskDto.ProjectId, appUser.Id);
         return taskVm;
     }
 
-
     public async Task<Guid> UpdateTask(UpdateTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
+        _logger.LogInformation("Updating task {TaskId} in project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
+
         var rowsAffected = await _dbContext.Tasks
             .Where(t => t.Id == taskDto.TaskId && t.ProjectId == taskDto.ProjectId)
             .Join(_dbContext.Projects,
@@ -79,13 +95,19 @@ public class TaskService
                 .SetProperty(t => t.Priority, taskDto.Priority), ct);
 
         if (rowsAffected == 0)
+        {
+            _logger.LogWarning("Task {TaskId} or project {ProjectId} not found for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
             throw new NotFoundException(nameof(Project), taskDto.ProjectId);
+        }
 
+        _logger.LogInformation("Updated task {TaskId} in project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
         return taskDto.TaskId;
     }
 
     public async Task<Guid> DoTask(DoTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
+        _logger.LogInformation("Marking task {TaskId} as done in project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
+
         var rowsAffected = await _dbContext.Tasks
             .Where(t => t.Id == taskDto.TaskId && t.ProjectId == taskDto.ProjectId)
             .Join(_dbContext.Projects,
@@ -98,13 +120,19 @@ public class TaskService
                 .SetProperty(t => t.IsDone, taskDto.IsDone), ct);
 
         if (rowsAffected == 0)
+        {
+            _logger.LogWarning("Task {TaskId} or project {ProjectId} not found for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
             throw new NotFoundException(nameof(Project), taskDto.ProjectId);
+        }
 
+        _logger.LogInformation("Marked task {TaskId} as done in project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
         return taskDto.TaskId;
     }
 
     public async Task RemoveTask(RemoveTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
+        _logger.LogInformation("Removing task {TaskId} from project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
+
         var rowsAffected = await _dbContext.Tasks
             .Where(t => t.Id == taskDto.TaskId && t.ProjectId == taskDto.ProjectId)
             .Join(_dbContext.Projects,
@@ -116,6 +144,11 @@ public class TaskService
             .ExecuteDeleteAsync(ct);
 
         if (rowsAffected == 0)
+        {
+            _logger.LogWarning("Task {TaskId} or project {ProjectId} not found for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
             throw new NotFoundException(nameof(Project), taskDto.ProjectId);
+        }
+
+        _logger.LogInformation("Removed task {TaskId} from project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
     }
 }

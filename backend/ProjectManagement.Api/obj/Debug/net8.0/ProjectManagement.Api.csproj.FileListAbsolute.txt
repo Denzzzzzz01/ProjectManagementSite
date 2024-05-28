@@ -131,3 +131,12 @@ D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\ne
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\FluentValidation.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.AspNetCore.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Extensions.Hosting.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Extensions.Logging.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Formatting.Compact.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Settings.Configuration.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Sinks.Console.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Sinks.Debug.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Sinks.File.dll
