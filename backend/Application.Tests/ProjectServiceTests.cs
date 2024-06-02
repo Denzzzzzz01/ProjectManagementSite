@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using ProjectManagement.Application.Contracts.Project;
 using ProjectManagement.Application.Services;
 using ProjectManagement.Core.Models;
 using ProjectManagement.Infrastructure.Persistence;
@@ -24,7 +25,7 @@ public class ProjectServiceTests
 
             context.Projects.AddRange(
                 firstProject, secondProject,
-                new Project { Id = Guid.NewGuid(), Name = "Project 3" } // Not owned by the user
+                new Project { Id = Guid.NewGuid(), Name = "Project 3" }
             );
 
             context.AppUserProjects.AddRange(
@@ -80,6 +81,37 @@ public class ProjectServiceTests
             // Assert
             Assert.NotNull(project);
             Assert.Equal(projectId, project.Id);
+        }
+    }
+
+    [Fact]
+    public async Task CreateProject_ShouldCreateAndReturnProject()
+    {
+        // Arrange
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase(databaseName: "TestDatabase")
+            .Options;
+
+        var appUser = new AppUser { Id = Guid.NewGuid() };
+        var createProjectDto = new CreateProjectDto { Name = "New Project" };
+
+        var loggerMock = new Mock<ILogger<ProjectService>>();
+        using (var context = new AppDbContext(options))
+        {
+            context.Users.Add(appUser);
+            context.SaveChanges();
+        }
+
+        using (var context = new AppDbContext(options))
+        {
+            var service = new ProjectService(context, loggerMock.Object);
+
+            // Act
+            var result = await service.CreateProject(createProjectDto, appUser);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(createProjectDto.Name, result.Name);
         }
     }
 }
