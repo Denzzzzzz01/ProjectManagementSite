@@ -1,0 +1,36 @@
+version: '3.4'
+  
+services:
+  projectmanagement.api:
+    image: ${DOCKER_REGISTRY-}projectmanagementapi
+    container_name: projectmanagement.api
+    build:
+      context: .
+      dockerfile: ProjectManagement.Api/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      - redis
+      - postgres.db
+
+  postgres.db:
+    image: postgres:latest
+    container_name: postgres.db
+    environment:
+      POSTGRES_DB: ProjectManagementSiteDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1q2w3e4r
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+
+volumes:
+  postgres-data:

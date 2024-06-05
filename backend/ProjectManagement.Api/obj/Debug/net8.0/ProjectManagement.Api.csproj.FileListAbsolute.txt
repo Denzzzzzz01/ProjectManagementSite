@@ -140,3 +140,5 @@ D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\ne
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Sinks.Console.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Sinks.Debug.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Sinks.File.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\StackExchange.Redis.dll

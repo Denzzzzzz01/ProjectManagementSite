@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ProjectManagement.Api.Extensions;
 using ProjectManagement.Application.Common.Mapping;
 using ProjectManagement.Application.Common.Validators;
 using ProjectManagement.Application.Interfaces;
@@ -113,6 +114,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 app.UseSerilogRequestLogging();
