@@ -48,3 +48,8 @@ D:\_Programming\ProjectManagementSite\backend\bin\Debug\ProjectManagement.Infras
 D:\_Programming\ProjectManagementSite\backend\obj\Debug\docker-compose.dcproj.AssemblyReference.cache
 D:\_Programming\ProjectManagementSite\backend\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
 D:\_Programming\ProjectManagementSite\backend\obj\Debug\docker-compose.dcproj.CopyComplete
+D:\_Programming\ProjectManagementSite\backend\bin\Debug\Microsoft.Extensions.Caching.StackExchangeRedis.dll
+D:\_Programming\ProjectManagementSite\backend\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\_Programming\ProjectManagementSite\backend\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+D:\_Programming\ProjectManagementSite\backend\bin\Debug\StackExchange.Redis.dll
+D:\_Programming\ProjectManagementSite\backend\bin\Debug\Pipelines.Sockets.Unofficial.dll

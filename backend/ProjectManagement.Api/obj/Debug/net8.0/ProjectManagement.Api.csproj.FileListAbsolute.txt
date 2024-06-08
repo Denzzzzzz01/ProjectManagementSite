@@ -142,3 +142,6 @@ D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\ne
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Serilog.Sinks.File.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
 D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\StackExchange.Redis.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\_Programming\ProjectManagementSite\backend\ProjectManagement.Api\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll

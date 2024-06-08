@@ -108,6 +108,12 @@ builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<TaskService>();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "SampleInstance";
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
