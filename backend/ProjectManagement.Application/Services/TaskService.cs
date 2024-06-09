@@ -5,6 +5,8 @@ using ProjectManagement.Application.Common.Exceptions;
 using ProjectManagement.Application.Interfaces;
 using ProjectManagement.Core.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace ProjectManagement.Application.Services;
 
@@ -12,17 +14,27 @@ public class TaskService
 {
     private readonly IAppDbContext _dbContext;
     private readonly ILogger<TaskService> _logger;
+    private readonly ICacheService _cache;
 
-    public TaskService(IAppDbContext dbContext, ILogger<TaskService> logger)
+    public TaskService(IAppDbContext dbContext, ILogger<TaskService> logger, ICacheService cache)
     {
         _dbContext = dbContext;
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<List<TaskVm>> GetProjectTasks(Guid projectId, AppUser appUser, CancellationToken ct = default)
     {
-        _logger.LogInformation("Fetching tasks for project {ProjectId} and user {UserId}", projectId, appUser.Id);
+        var cacheKey = $"ProjectTasks_{projectId}_{appUser.Id}";
+        var cachedTasks = await _cache.GetAsync<List<TaskVm>>(cacheKey, ct);
 
+        if (cachedTasks != null)
+        {
+            _logger.LogInformation("Fetching tasks for project {ProjectId} and user {UserId} from cache", projectId, appUser.Id);
+            return cachedTasks;
+        }
+
+        _logger.LogInformation("Fetching tasks for project {ProjectId} and user {UserId} from database", projectId, appUser.Id);
         var project = await _dbContext.Projects
             .AsNoTracking()
             .Include(p => p.Tasks)
@@ -37,6 +49,12 @@ public class TaskService
         var tasks = project.Tasks.OrderBy(t => t.AddedTime).ToList();
         var tasksVm = tasks.Adapt<List<TaskVm>>();
         _logger.LogInformation("Fetched {TaskCount} tasks for project {ProjectId} and user {UserId}", tasksVm.Count, projectId, appUser.Id);
+
+        await _cache.SetAsync(cacheKey, tasksVm, new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+        }, ct);
+
         return tasksVm;
     }
 
@@ -74,6 +92,10 @@ public class TaskService
 
         var taskVm = task.Adapt<TaskDetailedVm>();
         _logger.LogInformation("Added task {TaskId} to project {ProjectId} for user {UserId}", taskVm.Id, taskDto.ProjectId, appUser.Id);
+
+        var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
+        await _cache.RemoveAsync(cacheKey, ct);
+
         return taskVm;
     }
 
@@ -101,6 +123,10 @@ public class TaskService
         }
 
         _logger.LogInformation("Updated task {TaskId} in project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
+
+        var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
+        await _cache.RemoveAsync(cacheKey, ct);
+
         return taskDto.TaskId;
     }
 
@@ -126,8 +152,13 @@ public class TaskService
         }
 
         _logger.LogInformation("Marked task {TaskId} as done in project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
+
+        var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
+        await _cache.RemoveAsync(cacheKey, ct); 
+
         return taskDto.TaskId;
     }
+
 
     public async Task RemoveTask(RemoveTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
@@ -150,5 +181,8 @@ public class TaskService
         }
 
         _logger.LogInformation("Removed task {TaskId} from project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
+
+        var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
+        await _cache.RemoveAsync(cacheKey, ct);
     }
 }

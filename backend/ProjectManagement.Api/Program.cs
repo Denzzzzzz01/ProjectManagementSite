@@ -103,6 +103,7 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidators();
 
 MappingConfiguration.Configure();
+builder.Services.AddSingleton<ICacheService, CacheService>();
 builder.Services.AddScoped<ITokenService, TokenSerive>();
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 builder.Services.AddScoped<ProjectService>();
