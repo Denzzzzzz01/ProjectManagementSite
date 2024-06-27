@@ -6,7 +6,6 @@ using ProjectManagement.Application.Interfaces;
 using ProjectManagement.Core.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Caching.Distributed;
-using System.Text.Json;
 
 namespace ProjectManagement.Application.Services;
 

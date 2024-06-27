@@ -7,28 +7,27 @@ const Navbar = (props: Props) => {
     const { isLoggedIn, user, logout } = useAuth();
 
     return (
-      <nav >
-        <div >
-          <div >
+      <nav className='bg-gray-200 p-4 flex-shrink-0'>
+        <div className='flex justify-between items-center'>
+          <div>
             <Link to="/"><h1>ProjectManagementSite</h1></Link>
           </div>
           {isLoggedIn() ? (
-            <div>
+            <div className='flex space-x-4'>
               <div>Welcome, {user?.username}</div>
               <a
                 onClick={logout}
+                className='cursor-pointer'
               >
                 Logout
               </a>
             </div>
           ) : (
-            <div>
+            <div className='flex space-x-4'>
               <Link to="/login">
                 Login
               </Link>
-              <Link
-                to="/register"
-              >
+              <Link to="/register">
                 Signup
               </Link>
             </div>
@@ -38,4 +37,4 @@ const Navbar = (props: Props) => {
     );
 }
 
-export default Navbar
+export default Navbar;
