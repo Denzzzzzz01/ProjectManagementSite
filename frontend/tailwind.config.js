@@ -6,8 +6,8 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'custom-gradient': 'linear-gradient(90deg, #2d3130 0%, #424848 60%, #515756 100%)',
-        'custom-radial-gradient': 'radial-gradient(circle at 70% 30%, #515756 0%, #424848 30%, #2d3130 85%)',
+        'gray-gradient': 'linear-gradient(90deg, #2d3130 0%, #424848 60%, #515756 100%)' ,
+        'gray-radial-gradient': 'radial-gradient(circle at 70% 30%, #515756 0%, #424848 30%, #2d3130 85%)',
       },
       colors: {
         darkGray: {

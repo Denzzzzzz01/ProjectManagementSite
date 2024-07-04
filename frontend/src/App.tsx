@@ -6,7 +6,7 @@ import Navbar from './Components/Navbar/Navbar';
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-custom-radial-gradient">
+    <div className="min-h-screen flex flex-col bg-gray-radial-gradient">
       <UserProvider>
         <Navbar />
         <div className="flex-grow flex justify-center items-center">

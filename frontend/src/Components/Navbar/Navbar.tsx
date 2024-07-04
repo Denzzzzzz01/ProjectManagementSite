@@ -28,7 +28,7 @@ const Navbar = (props: Props) => {
                 Login
               </Link>
               <Link to="/register">
-                Signup
+                Register
               </Link>
             </div>
           )}
