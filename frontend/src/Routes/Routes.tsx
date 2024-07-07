@@ -4,6 +4,7 @@ import HomePage from "../Pages/HomePage/HomePage";
 import LoginPage from "../Pages/LoginPage/LoginPage";
 import RegisterPage from "../Pages/RegisterPage/RegisterPage";
 import ProtectedRoute from "./ProtectedRoute";
+import ProjectDetailPage from "../Pages/ProjectDetailPage/ProjectDetailPage";
 
 export const router = createBrowserRouter([
     {
@@ -11,6 +12,7 @@ export const router = createBrowserRouter([
       element: <App />,
       children: [
         { path: "", element: <ProtectedRoute><HomePage /></ProtectedRoute> },
+        { path: "project/:projectId", element: <ProtectedRoute><ProjectDetailPage /></ProtectedRoute> },
         { path: "login", element: <LoginPage /> },
         { path: "register", element: <RegisterPage /> },
       ],

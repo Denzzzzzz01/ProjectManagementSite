@@ -1,13 +1,11 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagement.Application.Contracts.Task;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using ProjectManagement.Application.Common.Exceptions;
+using ProjectManagement.Application.Contracts.Task;
 using ProjectManagement.Application.Interfaces;
 using ProjectManagement.Core.Models;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Caching.Distributed;
-
-namespace ProjectManagement.Application.Services;
 
 public class TaskService
 {
@@ -95,6 +93,8 @@ public class TaskService
         var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
         await _cache.RemoveAsync(cacheKey, ct);
 
+        await _cache.InvalidateProjectCache(taskDto.ProjectId, appUser.Id, ct);
+
         return taskVm;
     }
 
@@ -126,6 +126,8 @@ public class TaskService
         var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
         await _cache.RemoveAsync(cacheKey, ct);
 
+        await _cache.InvalidateProjectCache(taskDto.ProjectId, appUser.Id, ct);
+
         return taskDto.TaskId;
     }
 
@@ -153,11 +155,12 @@ public class TaskService
         _logger.LogInformation("Marked task {TaskId} as done in project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
 
         var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
-        await _cache.RemoveAsync(cacheKey, ct); 
+        await _cache.RemoveAsync(cacheKey, ct);
+
+        await _cache.InvalidateProjectCache(taskDto.ProjectId, appUser.Id, ct);
 
         return taskDto.TaskId;
     }
-
 
     public async Task RemoveTask(RemoveTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
@@ -183,5 +186,7 @@ public class TaskService
 
         var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
         await _cache.RemoveAsync(cacheKey, ct);
+
+        await _cache.InvalidateProjectCache(taskDto.ProjectId, appUser.Id, ct);
     }
 }

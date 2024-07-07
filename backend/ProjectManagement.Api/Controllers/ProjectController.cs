@@ -44,7 +44,7 @@ public class ProjectController : BaseController
     }
 
     [HttpPut(nameof(UpdateProject))]
-    public async Task<ActionResult<Guid>> UpdateProject([FromBody]  UpdateProjectDto projectDto, CancellationToken ct)
+    public async Task<ActionResult<Guid>> UpdateProject([FromBody] UpdateProjectDto projectDto, CancellationToken ct)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -54,8 +54,8 @@ public class ProjectController : BaseController
         return Ok(projectId);   
     }
 
-    [HttpPut(nameof(UpdateProjectStaus))]
-    public async Task<ActionResult<Guid>> UpdateProjectStaus([FromBody] UpdateProjectStatusDto projectDto, CancellationToken ct)
+    [HttpPut(nameof(UpdateProjectStatus))]
+    public async Task<ActionResult<Guid>> UpdateProjectStatus([FromBody] UpdateProjectStatusDto projectDto, CancellationToken ct)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

@@ -1,51 +1,43 @@
-﻿using System.Text;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using ProjectManagement.Application.Interfaces;
 using System.Text.Json;
-
-namespace ProjectManagement.Infrastructure.Services;
 
 public class CacheService : ICacheService
 {
     private readonly IDistributedCache _cache;
+    private readonly ILogger<CacheService> _logger;
 
-    public CacheService(IDistributedCache cache)
+    public CacheService(IDistributedCache cache, ILogger<CacheService> logger)
     {
         _cache = cache;
+        _logger = logger;
     }
 
-    public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
+    public async Task<T> GetAsync<T>(string key, CancellationToken ct = default)
     {
-        var cachedData = await _cache.GetAsync(key, cancellationToken);
+        var cachedData = await _cache.GetStringAsync(key, ct);
         if (cachedData == null)
-        {
             return default;
-        }
 
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
-
-        var jsonString = Encoding.UTF8.GetString(cachedData);
-        return JsonSerializer.Deserialize<T>(jsonString, options);
+        return JsonSerializer.Deserialize<T>(cachedData);
     }
 
-    public async Task SetAsync<T>(string key, T value, DistributedCacheEntryOptions options, CancellationToken cancellationToken = default)
+    public async Task SetAsync<T>(string key, T value, DistributedCacheEntryOptions options, CancellationToken ct = default)
     {
-        var optionsJson = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
-
-        var jsonString = JsonSerializer.Serialize(value, optionsJson);
-        var encodedData = Encoding.UTF8.GetBytes(jsonString);
-
-        await _cache.SetAsync(key, encodedData, options, cancellationToken);
+        var serializedData = JsonSerializer.Serialize(value);
+        await _cache.SetStringAsync(key, serializedData, options, ct);
     }
 
-    public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+    public async Task RemoveAsync(string key, CancellationToken ct = default)
     {
-        await _cache.RemoveAsync(key, cancellationToken);
+        await _cache.RemoveAsync(key, ct);
+    }
+
+    public async Task InvalidateProjectCache(Guid projectId, Guid userId, CancellationToken ct = default)
+    {
+        var projectCacheKey = $"Project_{projectId}_{userId}";
+        await _cache.RemoveAsync(projectCacheKey, ct);
+        _logger.LogInformation("Invalidated cache for project {ProjectId} and user {UserId}", projectId, userId);
     }
 }
