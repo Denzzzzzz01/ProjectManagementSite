@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../Context/useAuth';
-import { getUserProjects, deleteProject, updateProjectStatus } from '../../Services/ProjectService';
+import { getUserProjects, deleteProject, updateProject, createProject } from '../../Services/ProjectService';
 import { ProjectVm } from '../../Models/ProjectVm';
-import { Status } from '../../Enums/StatusEnum';
-import { getStatusLabel } from '../../Helpers/StatusHelpers';
-import CreateProjectModal from '../CreateProjectModal/CreateProjectModal';
-import UpdateProjectModal from '../UpdateProjectModal/UpdateProjectModal';
-import { Link } from 'react-router-dom';
+import ConfirmationModal from '../../Components/ConfirmationModal/ConfirmationModal';
+import ProjectList from '../ProjectList/ProjectList';
+import ProjectModal from '../ProjectModal/ProjectModal';
 
 const Projects: React.FC = () => {
   const [projects, setProjects] = useState<ProjectVm[]>([]);
   const { isLoggedIn, token } = useAuth();
   const [selectedProject, setSelectedProject] = useState<ProjectVm | null>(null);
-  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (isLoggedIn() && token) {
@@ -22,97 +22,102 @@ const Projects: React.FC = () => {
     }
   }, [isLoggedIn, token]);
 
-  const handleDeleteProject = async (projectId: string) => {
-    try {
-      await deleteProject(projectId);
-      setProjects(prevProjects => prevProjects.filter(project => project.id !== projectId));
-    } catch (error) {
-      console.error('Error deleting project:', error);
-    }
-  };
-
-  const handleOpenUpdateModal = (project: ProjectVm) => {
-    setSelectedProject(project);
-  };
-
-  const handleCloseUpdateModal = () => {
-    setSelectedProject(null);
-  };
-
-  const handleStatusClick = (project: ProjectVm) => {
-    setSelectedProject(project);
-    setShowStatusDropdown(true);
-  };
-
-  const handleSelectStatus = async (status: Status) => {
-    if (selectedProject) {
+  const updateProjectList = async () => {
+    if (isLoggedIn() && token) {
       try {
-        await updateProjectStatus(selectedProject.id, status);
-        setProjects(prevProjects =>
-          prevProjects.map(proj =>
-            proj.id === selectedProject.id ? { ...proj, status } : proj
-          )
-        );
-        setShowStatusDropdown(false);
-        setSelectedProject(null);
+        const projects = await getUserProjects();
+        setProjects(projects);
       } catch (error) {
-        console.error('Error updating project status:', error);
+        console.error('Error fetching projects:', error);
       }
     }
+  };
+
+  const handleDeleteProject = async () => {
+    if (projectToDelete) {
+      try {
+        await deleteProject(projectToDelete);
+        setProjects(prevProjects => prevProjects.filter(project => project.id !== projectToDelete));
+        setIsConfirmModalOpen(false);
+        setProjectToDelete(null);
+      } catch (error) {
+        console.error('Error deleting project:', error);
+      }
+    }
+  };
+
+  const handleSaveProject = async (project: { name: string }) => {
+    if (selectedProject) {
+      try {
+        const updatedProject = await updateProject(selectedProject.id, project.name);
+        setProjects(prevProjects =>
+          prevProjects.map(p => p.id === updatedProject.id ? updatedProject : p)
+        );
+        setSelectedProject(null);
+        updateProjectList();
+      } catch (error) {
+        console.error('Error updating project:', error);
+      }
+    } else {
+      try {
+        const newProject = await createProject(project.name);
+        setProjects(prevProjects => [...prevProjects, newProject]);
+        setIsCreateModalOpen(false);
+        updateProjectList(); 
+      } catch (error) {
+        console.error('Error creating project:', error);
+      }
+    }
+  };
+
+  const handleEditProject = (project: ProjectVm) => {
+    setSelectedProject(project);
+  };
+
+  const confirmDeleteProject = (projectId: string) => {
+    setProjectToDelete(projectId);
+    setIsConfirmModalOpen(true);
+  };
+
+  const closeConfirmModal = () => {
+    setIsConfirmModalOpen(false);
+    setProjectToDelete(null);
   };
 
   return (
     <div className="p-4">
       <h2 className="text-2xl mb-4">Your Projects</h2>
-      <ul className="list-disc pl-5">
-        {projects.map((project) => (
-          <li key={project.id} className="mb-2 flex items-center">
-            <Link to={`/project/${project.id}`} className="flex-grow">
-              {project.name}
-            </Link>
-            <span className="ml-4 cursor-pointer" onClick={() => handleStatusClick(project)}>
-              {getStatusLabel(project.status as Status)}
-            </span>
-            {showStatusDropdown && selectedProject?.id === project.id && (
-              <div className="absolute mt-2 bg-white shadow-lg rounded-md py-2 w-36 z-10">
-                {Object.values(Status).map((value) => (
-                  typeof value === 'number' && (
-                    <button
-                      key={value}
-                      onClick={() => handleSelectStatus(value as Status)}
-                      className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                    >
-                      {getStatusLabel(value as Status)}
-                    </button>
-                  )
-                ))}
-              </div>
-            )}
-            <button
-              onClick={() => handleOpenUpdateModal(project)}
-              className="ml-4 bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-            >
-              Update
-            </button>
-            <button
-              onClick={() => handleDeleteProject(project.id)}
-              className="ml-4 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+      <ProjectList projects={projects} onEdit={handleEditProject} onDelete={confirmDeleteProject} />
 
-      <CreateProjectModal setProjects={setProjects} />
+      <button
+        onClick={() => setIsCreateModalOpen(true)}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Create Project
+      </button>
 
-      {selectedProject && (
-        <UpdateProjectModal
-          project={selectedProject}
-          setProjects={setProjects}
-          closeModal={handleCloseUpdateModal}
-        />
-      )}
+      <ProjectModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSave={handleSaveProject}
+        title="Create Project"
+      />
+
+      <ProjectModal
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+        onSave={handleSaveProject}
+        initialProject={selectedProject ? { name: selectedProject.name } : undefined}
+        title="Update Project"
+      />
+
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={closeConfirmModal}
+        onConfirm={handleDeleteProject}
+        title="Confirm Project Deletion"
+        message="Are you sure you want to delete this project?"
+      />
     </div>
   );
 };

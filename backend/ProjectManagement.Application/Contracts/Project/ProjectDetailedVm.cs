@@ -7,7 +7,7 @@ public class ProjectDetailedVm
 {
     public Guid Id { get; set; }    
     
-    public DateTime CretedTime { get; set; }
+    public DateTime CreatedTime { get; set; }
     public string Name { get; set; }
     public List<TaskVm> Tasks { get; set; }
     public Status Status { get; set; }

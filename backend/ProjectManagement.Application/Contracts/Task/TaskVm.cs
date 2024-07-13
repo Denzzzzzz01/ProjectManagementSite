@@ -10,4 +10,5 @@ public class TaskVm
     public bool IsDone { get; set; }
     public Priority Priority { get; set; }
     public string Title { get; set; }
+    public string Description { get; set; }
 }

@@ -9,6 +9,11 @@ export const getUserProjects = async (): Promise<ProjectVm[]> => {
   return response.data;
 };
 
+export const getProjectById = async (projectId: string): Promise<DetailedProject> => {
+  const response = await axios.get(`${API_BASE_URL}/Project/GetProjectById?projectId=${projectId}`);
+  return response.data;
+};
+
 export const createProject = async (projectName: string): Promise<ProjectVm> => {
   const response = await axios.post(`${API_BASE_URL}/Project/CreateProject`, { name: projectName });
   return response.data;
@@ -26,10 +31,5 @@ export const updateProject = async (projectId: string, projectName: string): Pro
 };
 
 export const updateProjectStatus = async (projectId: string, newStatus: Status): Promise<void> => {
-  await axios.put(`${API_BASE_URL}/Project/UpdateProjectStatus`, { projectId, newStatus });
-};
-
-export const getProjectById = async (projectId: string): Promise<DetailedProject> => {
-  const response = await axios.get(`${API_BASE_URL}/Project/GetProjectById?projectId=${projectId}`);
-  return response.data;
+  await axios.put(`${API_BASE_URL}/Project/UpdateProjectStatus`, { id: projectId, status: newStatus });
 };

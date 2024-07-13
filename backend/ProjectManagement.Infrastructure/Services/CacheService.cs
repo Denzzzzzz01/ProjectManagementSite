@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using ProjectManagement.Application.Interfaces;
 using System.Text.Json;
 
 public class CacheService : ICacheService
