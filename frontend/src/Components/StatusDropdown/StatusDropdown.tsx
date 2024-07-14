@@ -16,7 +16,7 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({ currentStatus, handleSt
 
   const handleStatusSelect = (status: Status) => {
     handleStatusChange(status);
-    setIsDropdownOpen(false); // Закрываем выпадающий список после выбора
+    setIsDropdownOpen(false); 
   };
 
   return (

@@ -15,9 +15,9 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, onSave, in
 
   useEffect(() => {
     if (initialProject) {
-      setProjectName(initialProject.name); // Set project name only when the modal is opened
+      setProjectName(initialProject.name);
     } else {
-      setProjectName(''); // Reset project name when modal is closed
+      setProjectName(''); 
     }
   }, [isOpen, initialProject]);
 

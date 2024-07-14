@@ -15,9 +15,9 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, initialT
 
   useEffect(() => {
     if (initialTask) {
-      setTask(initialTask); // Set task only when initialTask changes
+      setTask(initialTask); 
     } else {
-      setTask({ title: '', description: '', priority: Priority.Low }); // Reset task when modal is closed
+      setTask({ title: '', description: '', priority: Priority.Low });
     }
   }, [isOpen, initialTask]);
 

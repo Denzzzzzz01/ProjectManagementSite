@@ -5,6 +5,7 @@ import { ProjectVm } from '../../Models/ProjectVm';
 import ConfirmationModal from '../../Components/ConfirmationModal/ConfirmationModal';
 import ProjectList from '../ProjectList/ProjectList';
 import ProjectModal from '../ProjectModal/ProjectModal';
+import { notifyError, notifySuccess, toastPromise } from '../../Utils/toastUtils';
 
 const Projects: React.FC = () => {
   const [projects, setProjects] = useState<ProjectVm[]>([]);
@@ -29,6 +30,7 @@ const Projects: React.FC = () => {
         setProjects(projects);
       } catch (error) {
         console.error('Error fetching projects:', error);
+        notifyError('Error fetching projects');
       }
     }
   };
@@ -36,7 +38,12 @@ const Projects: React.FC = () => {
   const handleDeleteProject = async () => {
     if (projectToDelete) {
       try {
-        await deleteProject(projectToDelete);
+        await toastPromise(
+          deleteProject(projectToDelete),
+          'Deleting project',
+          'Project deleted successfully!',
+          'Failed to delete project'
+        );
         setProjects(prevProjects => prevProjects.filter(project => project.id !== projectToDelete));
         setIsConfirmModalOpen(false);
         setProjectToDelete(null);
@@ -49,9 +56,14 @@ const Projects: React.FC = () => {
   const handleSaveProject = async (project: { name: string }) => {
     if (selectedProject) {
       try {
-        const updatedProject = await updateProject(selectedProject.id, project.name);
+        await toastPromise(
+          updateProject(selectedProject.id, project.name),
+          'Updating project',
+          'Project has been updated!',
+          'Failed to update project'
+        );
         setProjects(prevProjects =>
-          prevProjects.map(p => p.id === updatedProject.id ? updatedProject : p)
+          prevProjects.map(p => p.id === selectedProject.id ? { ...p, name: project.name } : p)
         );
         setSelectedProject(null);
         updateProjectList();
@@ -60,10 +72,14 @@ const Projects: React.FC = () => {
       }
     } else {
       try {
-        const newProject = await createProject(project.name);
-        setProjects(prevProjects => [...prevProjects, newProject]);
+        await toastPromise(
+          createProject(project.name),
+          'Creating project',
+          'Project created successfully!',
+          'Failed to create project'
+        );
         setIsCreateModalOpen(false);
-        updateProjectList(); 
+        updateProjectList();
       } catch (error) {
         console.error('Error creating project:', error);
       }
