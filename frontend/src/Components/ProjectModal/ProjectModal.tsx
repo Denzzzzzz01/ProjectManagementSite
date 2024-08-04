@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../Components/Modal/Modal';
-import { ProjectVm } from '../../Models/ProjectVm';
 
 interface ProjectModalProps {
   isOpen: boolean;

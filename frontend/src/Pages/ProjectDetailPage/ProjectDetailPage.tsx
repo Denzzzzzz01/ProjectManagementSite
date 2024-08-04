@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getProjectById, updateProjectStatus } from '../../Services/ProjectService';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getProjectById, updateProjectStatus, deleteProject, updateProject } from '../../Services/ProjectService';
 import { DetailedProject } from '../../Models/DetailedProject';
 import { Status } from '../../Enums/StatusEnum';
 import { Priority } from '../../Enums/PriorityEnum';
@@ -10,10 +10,13 @@ import TaskModal from '../../Components/TaskModal/TaskModal';
 import { UpdateTaskDto } from '../../Models/UpdateTaskDto';
 import { addTask, markTaskDone, removeTask, updateTask } from '../../Services/TaskService';
 import ConfirmationModal from '../../Components/ConfirmationModal/ConfirmationModal';
+import ProjectModal from '../../Components/ProjectModal/ProjectModal';
 import { notifyError, notifySuccess, toastPromise } from '../../Utils/toastUtils';
+import '@flaticon/flaticon-uicons/css/all/all.css';
 
 const ProjectDetailPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
+  const navigate = useNavigate();
   const [project, setProject] = useState<DetailedProject | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updateTaskId, setUpdateTaskId] = useState<string | null>(null); 
@@ -25,6 +28,8 @@ const ProjectDetailPage: React.FC = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [taskToDeleteId, setTaskToDeleteId] = useState<string | null>(null);
+  const [isDeleteProjectModalOpen, setIsDeleteProjectModalOpen] = useState(false);
+  const [isUpdateProjectModalOpen, setIsUpdateProjectModalOpen] = useState(false);
 
   useEffect(() => {
     if (projectId) {
@@ -151,50 +156,134 @@ const ProjectDetailPage: React.FC = () => {
     setTaskToDeleteId(null);
   };
 
+  const handleDeleteProject = async () => {
+    if (projectId) {
+      try {
+        await toastPromise(
+          deleteProject(projectId),
+          'Deleting project',
+          'Project deleted successfully!',
+          'Failed to delete project'
+        );
+        navigate('/');
+      } catch (error) {
+        console.error('Error deleting project:', error);
+      }
+    }
+  };
+
+  const confirmDeleteProject = () => {
+    setIsDeleteProjectModalOpen(true);
+  };
+
+  const closeDeleteProjectModal = () => {
+    setIsDeleteProjectModalOpen(false);
+  };
+
+  const handleUpdateProject = async (project: { name: string }) => {
+    if (projectId) {
+      try {
+        await toastPromise(
+          updateProject(projectId, project.name),
+          'Updating project',
+          'Project updated successfully!',
+          'Failed to update project'
+        );
+        const updatedProject = await getProjectById(projectId);
+        setProject(updatedProject);
+        setIsUpdateProjectModalOpen(false);
+      } catch (error) {
+        console.error('Error updating project:', error);
+      }
+    }
+  };
+
   if (!project) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl mb-4">{project.name}</h2>
-      <StatusDropdown currentStatus={project.status as Status} handleStatusChange={handleStatusChange} />
-      <p className="mb-2">Created Time: {new Date(project.createdTime).toLocaleString()}</p>
-      <h3 className="text-xl mt-4 mb-2">Tasks:</h3>
-      <TaskList 
-        project={project} 
-        handleRemoveTask={confirmDeleteTask} 
-        handleMarkTaskDone={handleMarkTaskDone} 
-        handleOpenUpdateModal={handleOpenUpdateModal} 
-      />
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="bg-blue-500 text-white px-4 py-2 rounded mt-6"
-      >
-        Add Task
-      </button>
+    <div className="flex flex-col lg:flex-row gap-24 w-full max-w-[70%] h-[80vh] font-sans">
+      <div className="flex flex-col items-center justify-center h-min w-auto lg:w-[50%] bg-white p-4 rounded shadow">
+        <div className='flex items-start justify-between w-[100%]'>
+        <h2 className="text-4xl font-bold">{project.name}</h2>
+        <StatusDropdown currentStatus={project.status as Status} handleStatusChange={handleStatusChange}/>
+        </div>
+        <p className="mt-6">Created Time: {new Date(project.createdTime).toLocaleString()}</p>
+        <div className="w-[100%] flex justify-end mt-8">
+          <button
+            onClick={() => setIsUpdateProjectModalOpen(true)}
+            className="bg-beige text-white px-4 py-2 rounded shadow-gray-700 shadow-sm mr-2 transform transition-transform duration-200 active:shadow-inner active:shadow-gray-700 active:pt-2.5 active:pb-0.5 hover:bg-beige-dark"
+          >
+            <i className="fi fi-rs-pencil"></i>
+          </button>
+          <button
+            onClick={confirmDeleteProject}
+            className="bg-beige text-white px-4 py-2 rounded shadow-gray-700 shadow-sm transform transition-transform duration-200 active:shadow-inner active:shadow-gray-700 active:pt-2.5 active:pb-0.5 hover:bg-beige-dark"
+          >
+            <i className="fi fi-rs-trash"></i>
+          </button>
+        </div>
+      </div>
 
-      <TaskModal 
-        title="Add New Task" 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSave={handleAddTask} 
+      <div className="w-full lg:w-[50%] p-4 h-full max-h-full overflow-y-auto bg-black bg-opacity-25 rounded-lg shadow-lg scrollbar-hide">
+        <h1 className="font-bold mb-6 text-center text-gray-200 flex justify-center items-center">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-beige mr-2 shadow-md shadow-black rounded transform transition-transform duration-200 hover:bg-beige-dark active:bg-beige-light"
+          >
+            <img src="https://cdn-icons-png.flaticon.com/512/3917/3917177.png" draggable="false" width="56" height="56" className='hover:scale-110 active:scale-90'/>
+          </button>
+          <p className='text-4xl'>TASKS</p>
+        </h1>
+        <TaskList
+        className="h-[85%] scrollbar-hide" 
+          project={project}
+          handleRemoveTask={confirmDeleteTask}
+          handleMarkTaskDone={handleMarkTaskDone}
+          handleOpenUpdateModal={handleOpenUpdateModal}
+        />
+        <div className="flex justify-end mt-6"></div>
+      </div>
+
+      <TaskModal
+        title="Add New Task"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddTask}
       />
 
-      <TaskModal 
-        title="Update Task" 
-        isOpen={isUpdateModalOpen} 
-        onClose={handleCloseUpdateModal} 
-        onSave={handleUpdateTask} 
-        initialTask={updateTaskForm} 
+      <TaskModal
+        title="Update Task"
+        isOpen={isUpdateModalOpen}
+        onClose={handleCloseUpdateModal}
+        onSave={handleUpdateTask}
+        initialTask={updateTaskForm}
+      />
+
+      <ProjectModal
+        title="Update Project"
+        isOpen={isUpdateProjectModalOpen}
+        onClose={() => setIsUpdateProjectModalOpen(false)}
+        onSave={handleUpdateProject}
+        initialProject={{ name: project.name }}
       />
 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}
         onConfirm={() => taskToDeleteId && handleRemoveTask(taskToDeleteId)}
-        title='Confirm Task Deletion'
-        message="Are you sure you want to delete this task?"  />
+        title="Confirm Task Deletion"
+        message="Are you sure you want to delete this task?"
+      />
+
+      <ConfirmationModal
+        isOpen={isDeleteProjectModalOpen}
+        onClose={closeDeleteProjectModal}
+        onConfirm={handleDeleteProject}
+        title="Confirm Project Deletion"
+        message="Are you sure you want to delete this project?"
+      />
     </div>
   );
 };

@@ -11,6 +11,9 @@ public class Project
     public DateTime CreatedTime {  get; set; } = DateTime.UtcNow;  
     
     public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string LogoUrl { get; set; } = string.Empty;
     public List<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
     public Status Status { get; set; } = Status.InProgress;
+
 }

@@ -11,4 +11,6 @@ public class ProjectDetailedVm
     public string Name { get; set; }
     public List<TaskVm> Tasks { get; set; }
     public Status Status { get; set; }
+    public string Description { get; set; }
+    public string LogoUrl { get; set; }
 }

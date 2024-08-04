@@ -30,7 +30,7 @@ const RegisterPage = (props: Props) => {
     <section className="flex flex-col items-center justify-center w-full h-full rounded-b-lg max-w-md">
       <div className="rounded-lg shadow-lg max-w-md w-full bg-black bg-opacity-25">
         <div className="bg-white pt-8 pl-8 pr-8 pb-4 rounded-t-lg rounded-l-lg shadow-lg max-w-md w-full">
-          <h1 className="text-2xl font-bold mb-6 text-center">Sign u  p to your account</h1>
+          <h1 className="text-2xl font-bold mb-6 text-center">Sign up to your account</h1>
           <form onSubmit={handleSubmit(handleRegister)} className="">
             <div className="mt-4">
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>

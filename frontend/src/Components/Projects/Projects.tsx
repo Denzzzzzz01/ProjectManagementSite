@@ -6,6 +6,8 @@ import ConfirmationModal from '../../Components/ConfirmationModal/ConfirmationMo
 import ProjectList from '../ProjectList/ProjectList';
 import ProjectModal from '../ProjectModal/ProjectModal';
 import { notifyError, notifySuccess, toastPromise } from '../../Utils/toastUtils';
+import '@flaticon/flaticon-uicons/css/all/all.css';
+
 
 const Projects: React.FC = () => {
   const [projects, setProjects] = useState<ProjectVm[]>([]);
@@ -86,14 +88,14 @@ const Projects: React.FC = () => {
     }
   };
 
-  const handleEditProject = (project: ProjectVm) => {
-    setSelectedProject(project);
-  };
+  // const handleEditProject = (project: ProjectVm) => {
+  //   setSelectedProject(project);
+  // };
 
-  const confirmDeleteProject = (projectId: string) => {
-    setProjectToDelete(projectId);
-    setIsConfirmModalOpen(true);
-  };
+  // const confirmDeleteProject = (projectId: string) => {
+  //   setProjectToDelete(projectId);
+  //   setIsConfirmModalOpen(true);
+  // };
 
   const closeConfirmModal = () => {
     setIsConfirmModalOpen(false);
@@ -103,7 +105,7 @@ const Projects: React.FC = () => {
   return (
     <div className="p-4">
       <h2 className="text-2xl mb-4">Your Projects</h2>
-      <ProjectList projects={projects} onEdit={handleEditProject} onDelete={confirmDeleteProject} />
+      <ProjectList projects={projects} />
 
       <button
         onClick={() => setIsCreateModalOpen(true)}

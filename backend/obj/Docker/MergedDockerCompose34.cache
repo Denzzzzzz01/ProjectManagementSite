@@ -1,0 +1,101 @@
+name: dockercompose5338540976381347502
+services:
+  migrations:
+    build:
+      context: D:\_Programming\ProjectManagementSite\backend
+      dockerfile: Dockerfile
+      target: migrations
+    container_name: projectmanagement.migrations
+    depends_on:
+      postgres.db:
+        condition: service_started
+        required: true
+    entrypoint:
+      - dotnet-ef
+      - database
+      - update
+      - --project
+      - ProjectManagement.Infrastructure
+      - --startup-project
+      - ProjectManagement.Api
+    networks:
+      default: null
+  postgres.db:
+    container_name: postgres.db
+    environment:
+      POSTGRES_DB: ProjectManagementSiteDb
+      POSTGRES_PASSWORD: 1q2w3e4r
+      POSTGRES_USER: postgres
+    image: postgres:latest
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql/data
+        volume: {}
+  projectmanagement.api:
+    build:
+      context: D:\_Programming\ProjectManagementSite\backend
+      dockerfile: ProjectManagement.Api/Dockerfile
+    container_name: projectmanagement.api
+    depends_on:
+      postgres.db:
+        condition: service_started
+        required: true
+      redis:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "5000"
+      ASPNETCORE_HTTPS_PORTS: "5001"
+    image: projectmanagementapi
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5000
+        published: "5000"
+        protocol: tcp
+      - mode: ingress
+        target: 5001
+        published: "5001"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\desie\AppData\Roaming/Microsoft/UserSecrets
+        target: /home/app/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\desie\AppData\Roaming/ASP.NET/Https
+        target: /home/app/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+  redis:
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+    image: redis:latest
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 6379
+        published: "6379"
+        protocol: tcp
+networks:
+  default:
+    name: dockercompose5338540976381347502_default
+volumes:
+  postgres-data:
+    name: dockercompose5338540976381347502_postgres-data
