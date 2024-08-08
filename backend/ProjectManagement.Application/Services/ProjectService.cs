@@ -101,6 +101,7 @@ public class ProjectService
 
             OwnerId = appUser.Id,
             Name = projectDto.Name,
+            Description = projectDto.Description
         };
 
         var appUserProject = new AppUserProject

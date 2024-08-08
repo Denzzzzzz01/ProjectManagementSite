@@ -108,6 +108,7 @@ builder.Services.AddScoped<ITokenService, TokenSerive>();
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<TaskService>();
+builder.Services.AddScoped<ProjectMembersService>();
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {

@@ -12,8 +12,8 @@ using ProjectManagement.Infrastructure.Persistence;
 namespace ProjectManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240518070911_Init")]
-    partial class Init
+    [Migration("20240807081841_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,13 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a716268f-257d-4fa0-95c2-0f1da443f3ca"),
+                            Id = new Guid("370a68e8-79ab-451f-8cb2-5b41f5f50bea"),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("97ae385b-d903-45fc-af18-50cc77514977"),
+                            Id = new Guid("e78d9701-8b31-463a-bfdd-284813e754c4"),
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -258,6 +258,10 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -269,8 +273,6 @@ namespace ProjectManagement.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Projects");
                 });
@@ -300,15 +302,15 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.Property<bool>("IsDone")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("priority")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -387,33 +389,18 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectManagement.Core.Models.Project", b =>
-                {
-                    b.HasOne("ProjectManagement.Core.Models.AppUser", "Owner")
-                        .WithMany("OwnedProjects")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
-                });
-
             modelBuilder.Entity("ProjectManagement.Core.Models.ProjectTask", b =>
                 {
-                    b.HasOne("ProjectManagement.Core.Models.Project", "Project")
+                    b.HasOne("ProjectManagement.Core.Models.Project", null)
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("ProjectManagement.Core.Models.AppUser", b =>
                 {
                     b.Navigation("AppUserProjects");
-
-                    b.Navigation("OwnedProjects");
                 });
 
             modelBuilder.Entity("ProjectManagement.Core.Models.Project", b =>

@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ProjectManagement.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +51,22 @@ namespace ProjectManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -160,27 +176,6 @@ namespace ProjectManagement.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Projects",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Projects_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AppUserProjects",
                 columns: table => new
                 {
@@ -214,10 +209,10 @@ namespace ProjectManagement.Infrastructure.Migrations
                     AddedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DoneTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDone = table.Column<bool>(type: "boolean", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    IsDone = table.Column<bool>(type: "boolean", nullable: false),
-                    priority = table.Column<int>(type: "integer", nullable: false)
+                    Priority = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -235,8 +230,8 @@ namespace ProjectManagement.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("97ae385b-d903-45fc-af18-50cc77514977"), null, "User", "USER" },
-                    { new Guid("a716268f-257d-4fa0-95c2-0f1da443f3ca"), null, "Admin", "ADMIN" }
+                    { new Guid("370a68e8-79ab-451f-8cb2-5b41f5f50bea"), null, "Admin", "ADMIN" },
+                    { new Guid("e78d9701-8b31-463a-bfdd-284813e754c4"), null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -282,11 +277,6 @@ namespace ProjectManagement.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_OwnerId",
-                table: "Projects",
-                column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Tasks_ProjectId",
                 table: "Tasks",
                 column: "ProjectId");
@@ -320,10 +310,10 @@ namespace ProjectManagement.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Projects");
         }
     }
 }

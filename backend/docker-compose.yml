@@ -6,7 +6,7 @@ services:
     container_name: projectmanagement.api
     build:
       context: .
-      dockerfile: ProjectManagement.Api/Dockerfile
+      dockerfile: ProjectManagement.Api/Dockerfile 
     ports:
       - "5000:5000"
       - "5001:5001"

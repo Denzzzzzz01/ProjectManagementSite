@@ -51,13 +51,13 @@ namespace ProjectManagement.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("be055c6b-e053-4732-83f2-dd84572c69c1"),
+                            Id = new Guid("370a68e8-79ab-451f-8cb2-5b41f5f50bea"),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("1b921a35-1040-4af0-bd19-22cb20c85daf"),
+                            Id = new Guid("e78d9701-8b31-463a-bfdd-284813e754c4"),
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -256,10 +256,6 @@ namespace ProjectManagement.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("LogoUrl")
                         .IsRequired()
                         .HasColumnType("text");
 
