@@ -1,7 +1,8 @@
 import { Status } from "../Enums/StatusEnum";
 
 export interface ProjectVm {
-    id: string;
-    name: string;
-    status: Status;
-  }
+  id: string;
+  name: string;
+  status: Status;
+  description: string;
+}

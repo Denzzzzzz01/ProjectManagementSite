@@ -61,7 +61,7 @@ public class TaskService
 
         var projectExists = await _dbContext.Projects
             .AsNoTracking()
-            .AnyAsync(p => p.Id == taskDto.ProjectId && p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id), ct);
+            .AnyAsync(p => p.Id == taskDto.ProjectId && p.OwnerId == appUser.Id, ct);  // Проверка владельца проекта
 
         if (!projectExists)
         {
@@ -108,7 +108,7 @@ public class TaskService
                   t => t.ProjectId,
                   p => p.Id,
                   (t, p) => new { Task = t, Project = p })
-            .Where(tp => tp.Project.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id))
+            .Where(tp => tp.Project.OwnerId == appUser.Id)  // Проверка владельца проекта
             .Select(tp => tp.Task)
             .ExecuteUpdateAsync(s => s
                 .SetProperty(t => t.Title, taskDto.Title)
@@ -130,6 +130,35 @@ public class TaskService
 
         return taskDto.TaskId;
     }
+
+    public async Task RemoveTask(RemoveTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
+    {
+        _logger.LogInformation("Removing task {TaskId} from project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
+
+        var rowsAffected = await _dbContext.Tasks
+            .Where(t => t.Id == taskDto.TaskId && t.ProjectId == taskDto.ProjectId)
+            .Join(_dbContext.Projects,
+                  t => t.ProjectId,
+                  p => p.Id,
+                  (t, p) => new { Task = t, Project = p })
+            .Where(tp => tp.Project.OwnerId == appUser.Id)  // Проверка владельца проекта
+            .Select(tp => tp.Task)
+            .ExecuteDeleteAsync(ct);
+
+        if (rowsAffected == 0)
+        {
+            _logger.LogWarning("Task {TaskId} or project {ProjectId} not found for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
+            throw new NotFoundException(nameof(Project), taskDto.ProjectId);
+        }
+
+        _logger.LogInformation("Removed task {TaskId} from project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
+
+        var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
+        await _cache.RemoveAsync(cacheKey, ct);
+
+        await _cache.InvalidateProjectCache(taskDto.ProjectId, appUser.Id, ct);
+    }
+
 
     public async Task<Guid> DoTask(DoTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
     {
@@ -162,31 +191,4 @@ public class TaskService
         return taskDto.TaskId;
     }
 
-    public async Task RemoveTask(RemoveTaskDto taskDto, AppUser appUser, CancellationToken ct = default)
-    {
-        _logger.LogInformation("Removing task {TaskId} from project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
-
-        var rowsAffected = await _dbContext.Tasks
-            .Where(t => t.Id == taskDto.TaskId && t.ProjectId == taskDto.ProjectId)
-            .Join(_dbContext.Projects,
-                  t => t.ProjectId,
-                  p => p.Id,
-                  (t, p) => new { Task = t, Project = p })
-            .Where(tp => tp.Project.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id))
-            .Select(tp => tp.Task)
-            .ExecuteDeleteAsync(ct);
-
-        if (rowsAffected == 0)
-        {
-            _logger.LogWarning("Task {TaskId} or project {ProjectId} not found for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
-            throw new NotFoundException(nameof(Project), taskDto.ProjectId);
-        }
-
-        _logger.LogInformation("Removed task {TaskId} from project {ProjectId} for user {UserId}", taskDto.TaskId, taskDto.ProjectId, appUser.Id);
-
-        var cacheKey = $"ProjectTasks_{taskDto.ProjectId}_{appUser.Id}";
-        await _cache.RemoveAsync(cacheKey, ct);
-
-        await _cache.InvalidateProjectCache(taskDto.ProjectId, appUser.Id, ct);
-    }
 }

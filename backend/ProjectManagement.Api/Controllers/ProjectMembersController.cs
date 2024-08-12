@@ -9,7 +9,6 @@ namespace ProjectManagement.Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/[controller]")]
 public class ProjectMembersController : BaseController
 {
     private readonly ProjectMembersService _projectMembersService;

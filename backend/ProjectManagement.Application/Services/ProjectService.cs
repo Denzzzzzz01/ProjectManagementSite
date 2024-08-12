@@ -129,10 +129,12 @@ public class ProjectService
         _logger.LogInformation("Updating project {ProjectId} for user {UserId}", projectDto.Id, appUser.Id);
 
         var rowsAffected = await _dbContext.Projects
-            .Where(p => p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id))
+            .Where(p => p.OwnerId == appUser.Id) 
             .Where(p => p.Id == projectDto.Id)
             .ExecuteUpdateAsync(s => s
-                .SetProperty(p => p.Name, projectDto.Name), ct);
+                .SetProperty(p => p.Name, projectDto.Name)
+                .SetProperty(p => p.Description, projectDto.Description),
+                ct);
 
         if (rowsAffected == 0)
         {
@@ -151,12 +153,13 @@ public class ProjectService
         return projectDto.Id;
     }
 
+
     public async Task<Guid> UpdateProjectStatus(UpdateProjectStatusDto projectDto, AppUser appUser, CancellationToken ct = default)
     {
         _logger.LogInformation("Updating status of project {ProjectId} for user {UserId}", projectDto.Id, appUser.Id);
 
         var rowsAffected = await _dbContext.Projects
-            .Where(p => p.AppUserProjects.Any(aup => aup.AppUserId == appUser.Id))
+            .Where(p => p.OwnerId == appUser.Id)  
             .Where(p => p.Id == projectDto.Id)
             .ExecuteUpdateAsync(s => s
                 .SetProperty(p => p.Status, projectDto.Status), ct);
@@ -177,6 +180,7 @@ public class ProjectService
 
         return projectDto.Id;
     }
+
 
     public async Task DeleteProject(Guid id, AppUser appUser, CancellationToken ct = default)
     {

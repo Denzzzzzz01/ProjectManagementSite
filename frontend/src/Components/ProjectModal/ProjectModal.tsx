@@ -4,13 +4,15 @@ import Modal from '../../Components/Modal/Modal';
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (project: { name: string }) => void;
-  initialProject?: { name: string };
+  onSave: (project: { name: string, description: string }) => void;
+  initialProject?: { name: string, description: string };
   title: string;
 }
 
 const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, onSave, initialProject, title }) => {
   const [projectName, setProjectName] = useState('');
+  const [projectDescription, setProjectDescription] = useState('');
+
 
   useEffect(() => {
     if (initialProject) {
@@ -21,7 +23,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, onSave, in
   }, [isOpen, initialProject]);
 
   const handleSave = () => {
-    onSave({ name: projectName });
+    onSave({ name: projectName, description: projectDescription });
     onClose();
   };
 
@@ -32,6 +34,12 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, onSave, in
         placeholder="Project name"
         value={projectName}
         onChange={(e) => setProjectName(e.target.value)}
+        className="border p-2 w-full mb-4 rounded"
+      />
+      <textarea
+        placeholder="Project description"
+        value={projectDescription}
+        onChange={(e) => setProjectDescription(e.target.value)}
         className="border p-2 w-full mb-4 rounded"
       />
       <div className="flex justify-end">

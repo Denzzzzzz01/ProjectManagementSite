@@ -21,6 +21,8 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects }) => {
           >
             <Link to={`/project/${project.id}`} className="p-4 flex-grow">
               {project.name}
+              <p>{project.description}</p> 
+
               <span className="ml-4 cursor-pointer">
                 {getStatusLabel(project.status as Status)}
               </span>

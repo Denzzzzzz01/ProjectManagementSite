@@ -7,4 +7,5 @@ export interface DetailedProject {
   createdTime: string;
   status: Status;
   tasks: Task[];
+  description: string; 
 }

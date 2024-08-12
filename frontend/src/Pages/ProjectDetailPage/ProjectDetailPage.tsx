@@ -11,9 +11,10 @@ import { UpdateTaskDto } from '../../Models/UpdateTaskDto';
 import { addTask, markTaskDone, removeTask, updateTask } from '../../Services/TaskService';
 import ConfirmationModal from '../../Components/ConfirmationModal/ConfirmationModal';
 import ProjectModal from '../../Components/ProjectModal/ProjectModal';
-import { notifyError, notifySuccess, toastPromise } from '../../Utils/toastUtils';
+import { toastPromise } from '../../Utils/toastUtils';
 import '@flaticon/flaticon-uicons/css/all/all.css';
-
+import ProjectMembersList from '../../Components/ProjectMembersList/ProjectMembersList';
+import UserSearchModal from '../../Components/UserSearchModal/UserSearchModal';
 const ProjectDetailPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ const ProjectDetailPage: React.FC = () => {
   const [taskToDeleteId, setTaskToDeleteId] = useState<string | null>(null);
   const [isDeleteProjectModalOpen, setIsDeleteProjectModalOpen] = useState(false);
   const [isUpdateProjectModalOpen, setIsUpdateProjectModalOpen] = useState(false);
+
+  const [isUserSearchModalOpen, setIsUserSearchModalOpen] = useState(false);  
 
   useEffect(() => {
     if (projectId) {
@@ -180,11 +183,11 @@ const ProjectDetailPage: React.FC = () => {
     setIsDeleteProjectModalOpen(false);
   };
 
-  const handleUpdateProject = async (project: { name: string }) => {
+  const handleUpdateProject = async (project: { name: string, description: string }) => {
     if (projectId) {
       try {
         await toastPromise(
-          updateProject(projectId, project.name),
+          updateProject(projectId, project.name, project.description),
           'Updating project',
           'Project updated successfully!',
           'Failed to update project'
@@ -198,6 +201,11 @@ const ProjectDetailPage: React.FC = () => {
     }
   };
 
+  
+  const closeUserSearchModal = () => {
+    setIsUserSearchModalOpen(false);
+  };
+
   if (!project) {
     return <div>Loading...</div>;
   }
@@ -206,10 +214,26 @@ const ProjectDetailPage: React.FC = () => {
     <div className="flex flex-col lg:flex-row gap-24 w-full max-w-[70%] h-[80vh] font-sans">
       <div className="flex flex-col items-center justify-center h-min w-auto lg:w-[50%] bg-white p-4 rounded shadow">
         <div className='flex items-start justify-between w-[100%]'>
-        <h2 className="text-4xl font-bold">{project.name}</h2>
-        <StatusDropdown currentStatus={project.status as Status} handleStatusChange={handleStatusChange}/>
+          <h2 className="text-4xl font-bold">{project.name}</h2>
+          <StatusDropdown currentStatus={project.status as Status} handleStatusChange={handleStatusChange}/>
         </div>
         <p className="mt-6">Created Time: {new Date(project.createdTime).toLocaleString()}</p>
+        <p className="mt-4">{project.description}</p>
+        
+        <button
+          onClick={() => setIsUserSearchModalOpen(true)}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Add Users
+        </button>
+
+        <UserSearchModal
+          isOpen={isUserSearchModalOpen}
+          onClose={closeUserSearchModal}
+          projectId={projectId || ''}
+        />
+        {projectId && <ProjectMembersList projectId={projectId} />}
+
         <div className="w-[100%] flex justify-end mt-8">
           <button
             onClick={() => setIsUpdateProjectModalOpen(true)}
@@ -266,7 +290,7 @@ const ProjectDetailPage: React.FC = () => {
         isOpen={isUpdateProjectModalOpen}
         onClose={() => setIsUpdateProjectModalOpen(false)}
         onSave={handleUpdateProject}
-        initialProject={{ name: project.name }}
+        initialProject={{ name: project.name, description: project.description }}
       />
 
       <ConfirmationModal

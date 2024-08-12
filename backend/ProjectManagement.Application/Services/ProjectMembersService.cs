@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using ProjectManagement.Application.Common.Exceptions;
 using ProjectManagement.Application.Contracts.Project;
 using ProjectManagement.Application.Interfaces;
@@ -11,11 +13,19 @@ public class ProjectMembersService
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IAppDbContext _dbContext;
+    private readonly ICacheService _cache;
+    private readonly ILogger<ProjectMembersService> _logger;
 
-    public ProjectMembersService(UserManager<AppUser> userManager, IAppDbContext dbContext)
+    public ProjectMembersService(
+        UserManager<AppUser> userManager,
+        IAppDbContext dbContext,
+        ICacheService cache,
+        ILogger<ProjectMembersService> logger)
     {
         _userManager = userManager;
         _dbContext = dbContext;
+        _cache = cache;
+        _logger = logger;
     }
 
     public async Task<List<AppUserDto>> SearchUsers(string searchTerm, CancellationToken ct = default)
@@ -58,10 +68,25 @@ public class ProjectMembersService
 
         project.AppUserProjects.Add(userProject);
         await _dbContext.SaveChangesAsync(ct);
+
+        var projectMembersCacheKey = $"ProjectMembers_{projectId}";
+        await _cache.RemoveAsync(projectMembersCacheKey, ct);
+
+        var userProjectsCacheKey = $"UserProjects_{userId}";
+        await _cache.RemoveAsync(userProjectsCacheKey, ct);
     }
 
     public async Task<List<AppUserDto>> GetProjectMembers(Guid projectId, CancellationToken ct = default)
     {
+        var cacheKey = $"ProjectMembers_{projectId}";
+        var cachedMembers = await _cache.GetAsync<List<AppUserDto>>(cacheKey, ct);
+
+        if (cachedMembers != null)
+        {
+            _logger.LogInformation("Fetching project members for project {ProjectId} from cache", projectId);
+            return cachedMembers;
+        }
+
         var project = await _dbContext.Projects
             .Include(p => p.AppUserProjects)
             .ThenInclude(aup => aup.User)
@@ -78,6 +103,11 @@ public class ProjectMembersService
             UserName = aup.User.UserName
         }).ToList();
 
+        await _cache.SetAsync(cacheKey, members, new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+        }, ct);
+
         return members;
     }
 
@@ -93,5 +123,14 @@ public class ProjectMembersService
 
         _dbContext.AppUserProjects.Remove(appUserProject);
         await _dbContext.SaveChangesAsync(ct);
+
+        var cacheKey = $"ProjectMembers_{projectId}";
+        await _cache.RemoveAsync(cacheKey, ct);
+
+        var userProjectsCacheKey = $"UserProjects_{userId}";
+        await _cache.RemoveAsync(userProjectsCacheKey, ct);
+
+        var projectCacheKey = $"Project_{projectId}_{userId}";
+        await _cache.RemoveAsync(projectCacheKey, ct);
     }
 }

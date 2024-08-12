@@ -55,11 +55,11 @@ const Projects: React.FC = () => {
     }
   };
 
-  const handleSaveProject = async (project: { name: string }) => {
+  const handleSaveProject = async (project: { name: string; description: string }) => {
     if (selectedProject) {
       try {
         await toastPromise(
-          updateProject(selectedProject.id, project.name),
+          updateProject(selectedProject.id, project.name, project.description),
           'Updating project',
           'Project has been updated!',
           'Failed to update project'
@@ -75,7 +75,7 @@ const Projects: React.FC = () => {
     } else {
       try {
         await toastPromise(
-          createProject(project.name),
+          createProject(project.name, project.description),
           'Creating project',
           'Project created successfully!',
           'Failed to create project'
@@ -87,15 +87,6 @@ const Projects: React.FC = () => {
       }
     }
   };
-
-  // const handleEditProject = (project: ProjectVm) => {
-  //   setSelectedProject(project);
-  // };
-
-  // const confirmDeleteProject = (projectId: string) => {
-  //   setProjectToDelete(projectId);
-  //   setIsConfirmModalOpen(true);
-  // };
 
   const closeConfirmModal = () => {
     setIsConfirmModalOpen(false);
@@ -125,7 +116,7 @@ const Projects: React.FC = () => {
         isOpen={!!selectedProject}
         onClose={() => setSelectedProject(null)}
         onSave={handleSaveProject}
-        initialProject={selectedProject ? { name: selectedProject.name } : undefined}
+        initialProject={selectedProject ? { name: selectedProject.name, description: selectedProject.description } : undefined}
         title="Update Project"
       />
 

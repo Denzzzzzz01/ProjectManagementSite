@@ -8,7 +8,7 @@ namespace ProjectManagement.Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class BaseController : ControllerBase
 {
     protected readonly UserManager<AppUser> _userManager;
