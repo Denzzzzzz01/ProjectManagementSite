@@ -9,7 +9,7 @@ using ProjectManagement.Core.Models;
 namespace ProjectManagement.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AccountController : ControllerBase
 {
     private readonly UserManager<AppUser> _userManager;

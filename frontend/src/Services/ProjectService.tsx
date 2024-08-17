@@ -6,6 +6,7 @@ import { DetailedProject } from '../Models/DetailedProject';
 
 export const getUserProjects = async (): Promise<ProjectVm[]> => {
   const response = await axios.get(`${API_BASE_URL}/Project/GetUserProjects`);
+  console.log(response.data);
   return response.data;
 };
 

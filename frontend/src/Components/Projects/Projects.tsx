@@ -94,16 +94,18 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl mb-4">Your Projects</h2>
+    <div key={token} className="p-4 font-sans max-w-md w-full max-h-[80vh] bg-black bg-opacity-25 rounded-lg shadow-lg scrollbar-hide">
+      <div className='flex justify-center items-center'>
+        <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-beige shadow-md shadow-black rounded transform transition-transform duration-200 hover:bg-beige-dark active:bg-beige-light"
+          >
+            <img src="https://cdn-icons-png.flaticon.com/512/3917/3917177.png" draggable="false" width="56" height="56" className='hover:scale-110 active:scale-90'/>
+          </button>
+          <h2 className="text-4xl ml-2 text-beige font-bold">PROJECTS</h2>
+      </div>
+      
       <ProjectList projects={projects} />
-
-      <button
-        onClick={() => setIsCreateModalOpen(true)}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Create Project
-      </button>
 
       <ProjectModal
         isOpen={isCreateModalOpen}

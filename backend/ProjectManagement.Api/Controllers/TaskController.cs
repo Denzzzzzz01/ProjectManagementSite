@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Application.Contracts.Task;
-using ProjectManagement.Application.Services;
 using ProjectManagement.Core.Models;
 
 namespace ProjectManagement.Api.Controllers;

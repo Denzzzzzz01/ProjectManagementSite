@@ -37,26 +37,6 @@ export const UserProvider = ({ children }: Props) => {
     setIsReady(true);
   }, []);
 
-  const registerUser = async (username: string, email: string, password: string
-  ) => {
-    await registerAPI( username, email, password)
-      .then((res) => {
-        if (res) {
-          localStorage.setItem("token", res?.data.token);
-          const userObj = {
-            username: res?.data.username,
-            email: res?.data.email,
-          };
-          localStorage.setItem("user", JSON.stringify(userObj));
-          setToken(res?.data.token!);
-          setUser(userObj!);
-          notifySuccess("Login Success!");
-          navigate("/");
-        } 
-      })
-      .catch((e) => notifyWarning("Server error occured"));
-  };
-
   const loginUser = async (email: string, password: string) => {
     await loginAPI(email, password)
       .then((res) => {
@@ -69,12 +49,34 @@ export const UserProvider = ({ children }: Props) => {
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(res?.data.token!);
           setUser(userObj!);
+          axios.defaults.headers.common["Authorization"] = "Bearer " + res?.data.token; 
           notifySuccess("Login Success!");
           navigate("/");
         }
       })
       .catch((e) => notifyWarning("Server error occured"));
   };
+  
+  const registerUser = async (username: string, email: string, password: string) => {
+    await registerAPI(username, email, password)
+      .then((res) => {
+        if (res) {
+          localStorage.setItem("token", res?.data.token);
+          const userObj = {
+            username: res?.data.username,
+            email: res?.data.email,
+          };
+          localStorage.setItem("user", JSON.stringify(userObj));
+          setToken(res?.data.token!);
+          setUser(userObj!);
+          axios.defaults.headers.common["Authorization"] = "Bearer " + res?.data.token;
+          notifySuccess("Login Success!");
+          navigate("/");
+        }
+      })
+      .catch((e) => notifyWarning("Server error occured"));
+  };
+  
 
   const isLoggedIn = () => {
     return !!user;
@@ -84,9 +86,11 @@ export const UserProvider = ({ children }: Props) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    setToken("");
+    setToken(null);
+    axios.defaults.headers.common["Authorization"] = null;
     navigate("/");
   };
+  
 
   return (
     <UserContext.Provider
