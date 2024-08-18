@@ -12,18 +12,37 @@ interface TaskModalProps {
 
 const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, initialTask, title }) => {
   const [task, setTask] = useState({ title: '', description: '', priority: Priority.Low });
+  const [errors, setErrors] = useState<{ title?: string; description?: string }>({});
 
   useEffect(() => {
     if (initialTask) {
-      setTask(initialTask); 
+      setTask(initialTask);
     } else {
       setTask({ title: '', description: '', priority: Priority.Low });
     }
   }, [isOpen, initialTask]);
 
+  const validate = () => {
+    const errors: { title?: string; description?: string } = {};
+
+    if (task.title.length < 3 || task.title.length > 100) {
+      errors.title = 'Title must be between 3 and 100 characters.';
+    }
+
+    if (task.description.length > 500) {
+      errors.description = 'Description must be 500 characters or less.';
+    }
+
+    setErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSave = () => {
-    onSave(task);
-    onClose();
+    if (validate()) {
+      onSave(task);
+      onClose();
+    }
   };
 
   return (
@@ -33,15 +52,19 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, initialT
         placeholder="Title"
         value={task.title}
         onChange={(e) => setTask({ ...task, title: e.target.value })}
-        className="border px-2 py-1 mr-2"
+        className={`border px-2 py-1 mr-2 ${errors.title ? 'border-red-500' : ''}`}
       />
+      {errors.title && <p className="text-red-500">{errors.title}</p>}
+
       <input
         type="text"
         placeholder="Description"
         value={task.description}
         onChange={(e) => setTask({ ...task, description: e.target.value })}
-        className="border px-2 py-1 mr-2"
+        className={`border px-2 py-1 mr-2 ${errors.description ? 'border-red-500' : ''}`}
       />
+      {errors.description && <p className="text-red-500">{errors.description}</p>}
+
       <select
         value={task.priority}
         onChange={(e) => setTask({ ...task, priority: parseInt(e.target.value) })}
@@ -64,4 +87,3 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, initialT
 };
 
 export default TaskModal;
-    

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import Modal from '../../Components/Modal/Modal';
-import { searchUsers, addUserToProject } from '../../Services/ProjectMembersService';
+import { searchUsers } from '../../Services/ProjectMembersService';
 import { AppUserDto } from '../../Models/AppUserDto';
-import { toastPromise } from '../../Utils/toastUtils'; // импортируйте toastPromise
 
 interface UserSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   projectId: string;
+  onAddUser: (userId: string) => Promise<void>;
 }
 
-const UserSearchModal: React.FC<UserSearchModalProps> = ({ isOpen, onClose, projectId }) => {
+const UserSearchModal: React.FC<UserSearchModalProps> = ({ isOpen, onClose, projectId, onAddUser }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState<AppUserDto[]>([]);
   const [loading, setLoading] = useState(false);
@@ -39,18 +39,9 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({ isOpen, onClose, proj
     }
   };
 
-  const handleAddUser = async (userId: string) => {
-    try {
-      await toastPromise(
-        addUserToProject(projectId, userId),
-        'Adding user to project',
-        'User added to project successfully!',
-        'Failed to add user to project'
-      );
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-    } catch (error) {
-      console.error('Error adding user to project:', error);
-    }
+  const handleAddUserClick = async (userId: string) => {
+    await onAddUser(userId);
+    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
   };
 
   return (
@@ -77,7 +68,7 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({ isOpen, onClose, proj
             <li key={user.id} className="flex items-center justify-between mb-2 p-2 bg-gray-200 rounded">
               <span>{user.userName}</span>
               <button
-                onClick={() => handleAddUser(user.id)}
+                onClick={() => handleAddUserClick(user.id)}
                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
               >
                 Add

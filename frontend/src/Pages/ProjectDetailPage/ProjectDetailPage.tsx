@@ -14,7 +14,7 @@ import ProjectModal from '../../Components/ProjectModal/ProjectModal';
 import { toastPromise } from '../../Utils/toastUtils';
 import '@flaticon/flaticon-uicons/css/all/all.css';
 import ProjectMembersList from '../../Components/ProjectMembersList/ProjectMembersList';
-import UserSearchModal from '../../Components/UserSearchModal/UserSearchModal';
+
 const ProjectDetailPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
@@ -31,8 +31,6 @@ const ProjectDetailPage: React.FC = () => {
   const [taskToDeleteId, setTaskToDeleteId] = useState<string | null>(null);
   const [isDeleteProjectModalOpen, setIsDeleteProjectModalOpen] = useState(false);
   const [isUpdateProjectModalOpen, setIsUpdateProjectModalOpen] = useState(false);
-
-  const [isUserSearchModalOpen, setIsUserSearchModalOpen] = useState(false);  
 
   useEffect(() => {
     if (projectId) {
@@ -201,56 +199,40 @@ const ProjectDetailPage: React.FC = () => {
     }
   };
 
-  
-  const closeUserSearchModal = () => {
-    setIsUserSearchModalOpen(false);
-  };
-
   if (!project) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="flex flex-col lg:flex-row gap-24 w-full max-w-[70%] h-[80vh] font-sans">
-      <div className="flex flex-col items-center justify-center h-min w-auto lg:w-[50%] bg-white p-4 rounded shadow">
-        <div className='flex items-start justify-between w-[100%]'>
-          <h2 className="text-4xl font-bold">{project.name}</h2>
+      <div className="flex flex-col items-center justify-center h-min max-h-full  w-auto lg:w-[50%] bg-black bg-opacity-25 rounded shadow">
+        <div className='flex items-start justify-between w-[100%] bg-white px-3 pt-3 pb-1 rounded'>
+          <h2 className="max-w-[45vh] text-4xl font-bold break-words ">{project.name}</h2>
           <StatusDropdown currentStatus={project.status as Status} handleStatusChange={handleStatusChange}/>
         </div>
-        <p className="mt-6">Created Time: {new Date(project.createdTime).toLocaleString()}</p>
-        <p className="mt-4">{project.description}</p>
         
-        <button
-          onClick={() => setIsUserSearchModalOpen(true)}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        >
-          Add Users
-        </button>
-
-        <UserSearchModal
-          isOpen={isUserSearchModalOpen}
-          onClose={closeUserSearchModal}
-          projectId={projectId || ''}
-        />
+        <p className="mt-6 text-white">Created Time: {new Date(project.createdTime).toLocaleString()}</p>
+        <div className="mt-4 max-w-[80%] text-white whitespace-pre-wrap break-words">{project.description}</div>
+        
         {projectId && <ProjectMembersList projectId={projectId} />}
 
-        <div className="w-[100%] flex justify-end mt-8">
+        <div className="w-[100%] flex justify-end mt-8 p-1 rounded bg-white">
           <button
             onClick={() => setIsUpdateProjectModalOpen(true)}
-            className="bg-beige text-white px-4 py-2 rounded shadow-gray-700 shadow-sm mr-2 transform transition-transform duration-200 active:shadow-inner active:shadow-gray-700 active:pt-2.5 active:pb-0.5 hover:bg-beige-dark"
+            className="bg-beige text-white px-4 py-2 rounded shadow-black shadow-sm mr-2 transform transition-transform duration-200 active:shadow-inner active:shadow-black active:pt-2.5 active:pb-0.5 hover:bg-beige-dark"
           >
             <i className="fi fi-rs-pencil"></i>
           </button>
           <button
             onClick={confirmDeleteProject}
-            className="bg-beige text-white px-4 py-2 rounded shadow-gray-700 shadow-sm transform transition-transform duration-200 active:shadow-inner active:shadow-gray-700 active:pt-2.5 active:pb-0.5 hover:bg-beige-dark"
+            className="bg-beige text-white px-4 py-2 rounded shadow-black shadow-sm transform transition-transform duration-200 active:shadow-inner active:shadow-black active:pt-2.5 active:pb-0.5 hover:bg-beige-dark"
           >
             <i className="fi fi-rs-trash"></i>
           </button>
         </div>
       </div>
 
-      <div className="w-full lg:w-[50%] p-4 h-full max-h-full overflow-y-auto bg-black bg-opacity-25 rounded-lg shadow-lg scrollbar-hide">
+      <div className="w-full lg:w-[50%] p-4 h-full max-h-full overflow-y-auto bg-black bg-opacity-25 rounded-lg shadow-lg">
         <h1 className="font-bold mb-6 text-center text-gray-200 flex justify-center items-center">
           <button
             onClick={() => setIsModalOpen(true)}

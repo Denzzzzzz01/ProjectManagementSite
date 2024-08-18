@@ -109,7 +109,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects }) => {
       </div>
 
       {sortedProjects.length === 0 ? (
-        <div className="text-center text-gray-500">No projects found for the selected status.</div>
+        <div className="text-center text-gray-500">No projects found.</div>
       ) : (
         <ul className="list-disc px-5 overflow-y-auto max-h-[500px] scrollbar-hide">
           {sortedProjects.map((project) => (
@@ -120,7 +120,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects }) => {
             >
               <Link to={`/project/${project.id}`} className="p-4 flex-col items-center justify-center text-center relative">
                 <div className="mb-3 flex items-center justify-center relative">
-                  <h3 className="text-xl font-bold">{project.name}</h3>
+                  <h3 className="max-w-[24vh] text-xl font-bold whitespace-pre-wrap break-words">{project.name}</h3>
                   {project.description && (
                     <i
                       className="fi fi-br-interrogation text-sm ml-2 cursor-pointer hover:scale-125 transition-transform"
