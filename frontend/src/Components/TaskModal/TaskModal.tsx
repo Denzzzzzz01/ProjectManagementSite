@@ -46,42 +46,49 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, initialT
   };
 
   return (
-    <Modal title={title} isOpen={isOpen} onClose={onClose}>
+    <Modal title={title} isOpen={isOpen} onClose={onClose} className='min-w-[25%] max-w-[50%]'>
       <input
         type="text"
         placeholder="Title"
         value={task.title}
         onChange={(e) => setTask({ ...task, title: e.target.value })}
-        className={`border px-2 py-1 mr-2 ${errors.title ? 'border-red-500' : ''}`}
+        className={`w-[100%] border px-2 py-1 mr-2 shadow-inner shadow-gray-400 rounded-sm ${errors.title ? 'border-red-500' : ''}`}
       />
       {errors.title && <p className="text-red-500">{errors.title}</p>}
 
-      <input
-        type="text"
+      <textarea
         placeholder="Description"
         value={task.description}
         onChange={(e) => setTask({ ...task, description: e.target.value })}
-        className={`border px-2 py-1 mr-2 ${errors.description ? 'border-red-500' : ''}`}
+        className={`w-[100%] max-h-[32vh] min-h-[4vh] border px-2 py-1 mt-4 mr-2 shadow-inner shadow-gray-400 rounded-sm ${errors.description ? 'border-red-500' : ''}`}
+        rows={4}
+        maxLength={500}
       />
       {errors.description && <p className="text-red-500">{errors.description}</p>}
-
-      <select
-        value={task.priority}
-        onChange={(e) => setTask({ ...task, priority: parseInt(e.target.value) })}
-        className="border px-2 py-1 mr-2"
-      >
-        {Object.keys(PriorityLabels).map((key) => (
-          <option key={key} value={key}>
-            {PriorityLabels[parseInt(key) as Priority]}
-          </option>
-        ))}
-      </select>
-      <button
-        onClick={handleSave}
-        className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
-      >
-        Save
-      </button>
+      <div className='mt-2 ml-2'>
+        Priority:
+        <select
+          value={task.priority}
+          onChange={(e) => setTask({ ...task, priority: parseInt(e.target.value) })}
+          className="border px-2 py-1 mr-2"
+        >
+          {Object.keys(PriorityLabels).map((key) => (
+            <option key={key} value={key}>
+              {PriorityLabels[parseInt(key) as Priority]}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="flex justify-end">
+        <button
+          onClick={handleSave}
+          className="bg-beige shadow-sm shadow-black text-white px-4 py-2 rounded mt-2
+          hover:bg-beige-dark active:pt-3 active:pb-1 active:shadow-inner active:shadow-black"
+        >
+          Apply
+        </button>
+      </div>
     </Modal>
   );
 };

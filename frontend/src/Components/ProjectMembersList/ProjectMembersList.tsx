@@ -120,7 +120,9 @@ const ProjectMembersList: React.FC<ProjectMembersListProps> = ({ projectId }) =>
         />
       </div>
 
-
+      {filteredMembers.length === 0 && (
+            <p className="text-gray-500 mt-4">No members found.</p>
+          )}
       <ul className="mt-4 max-h-[16vh] overflow-y-auto">
         {filteredMembers.map((member) => (
           <li key={member.id} className="flex justify-between items-center mb-2 mx-1 p-1 rounded-sm shadow-sm shadow-black bg-beige hover:bg-beige-dark">

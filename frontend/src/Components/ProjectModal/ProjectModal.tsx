@@ -54,13 +54,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   };
 
   return (
-    <Modal title={title} isOpen={isOpen} onClose={onClose}>
+    <Modal title={title} isOpen={isOpen} onClose={onClose} className='min-w-[25%] max-w-[50%]'>
       <input
         type="text"
         placeholder="Project name"
         value={projectName}
         onChange={(e) => setProjectName(e.target.value)}
-        className={`border p-2 w-full mb-4 rounded ${errors.name ? 'border-red-500' : ''}`}
+        className={`border p-2 w-full mb-4 shadow-inner shadow-gray-400 rounded-sm ${errors.name ? 'border-red-500' : ''}`}
       />
       {errors.name && <p className="text-red-500">{errors.name}</p>}
 
@@ -68,17 +68,20 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         placeholder="Project description"
         value={projectDescription}
         onChange={(e) => setProjectDescription(e.target.value)}
-        className={`border p-2 w-full mb-4 rounded ${errors.description ? 'border-red-500' : ''}`}
+        className={`w-[100%] max-h-[32vh] min-h-[4vh] border px-2 py-1 mt-4 mr-2 shadow-inner shadow-gray-400 rounded-sm ${errors.description ? 'border-red-500' : ''}`}
+        rows={4}
+        maxLength={500}
       />
       {errors.description && <p className="text-red-500">{errors.description}</p>}
 
       <div className="flex justify-end">
-        <button
-          onClick={handleSave}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-2"
-        >
-          Save
-        </button>
+      <button
+        onClick={handleSave}
+        className="bg-beige shadow-sm shadow-black text-white px-4 py-2 rounded mt-2
+        hover:bg-beige-dark active:pt-3 active:pb-1 active:shadow-inner active:shadow-black"
+      >
+        Apply
+      </button>
       </div>
     </Modal>
   );
