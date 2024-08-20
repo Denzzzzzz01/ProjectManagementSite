@@ -51,7 +51,7 @@ public class ProjectMembersService
             .Include(p => p.AppUserProjects)
             .FirstOrDefaultAsync(p => p.Id == projectId, ct);
 
-        if (project == null)
+        if (project is null)
             throw new NotFoundException(nameof(Project), projectId);
 
         if (project.OwnerId != owner.Id)

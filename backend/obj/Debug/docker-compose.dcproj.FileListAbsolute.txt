@@ -17,7 +17,6 @@ D:\_Programming\ProjectManagementSite\backend\bin\Debug\ProjectManagement.Infras
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Microsoft.Extensions.Identity.Stores.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Serilog.Extensions.Hosting.dll
-D:\_Programming\ProjectManagementSite\backend\bin\Debug\FluentValidation.AspNetCore.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Swashbuckle.AspNetCore.Swagger.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Swashbuckle.AspNetCore.SwaggerUI.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Serilog.AspNetCore.dll
@@ -35,7 +34,6 @@ D:\_Programming\ProjectManagementSite\backend\bin\Debug\Microsoft.IdentityModel.
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\FluentValidation.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Mapster.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Serilog.Extensions.Logging.dll
-D:\_Programming\ProjectManagementSite\backend\bin\Debug\FluentValidation.DependencyInjectionExtensions.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Microsoft.Extensions.DependencyModel.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Microsoft.IdentityModel.Logging.dll
 D:\_Programming\ProjectManagementSite\backend\bin\Debug\Microsoft.IdentityModel.Abstractions.dll

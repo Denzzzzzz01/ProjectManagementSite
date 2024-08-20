@@ -99,8 +99,8 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidators();
+//builder.Services.AddFluentValidationAutoValidation();
+//builder.Services.AddValidators();
 
 MappingConfiguration.Configure();
 builder.Services.AddSingleton<ICacheService, CacheService>();

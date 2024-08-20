@@ -142,3 +142,8 @@ D:\_Programming\ProjectManagementSite\backend\Application.Tests\bin\Debug\net8.0
 D:\_Programming\ProjectManagementSite\backend\Application.Tests\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 D:\_Programming\ProjectManagementSite\backend\Application.Tests\bin\Debug\net8.0\ProjectManagement.Infrastructure.dll
 D:\_Programming\ProjectManagementSite\backend\Application.Tests\bin\Debug\net8.0\ProjectManagement.Infrastructure.pdb
+D:\_Programming\ProjectManagementSite\backend\Application.Tests\bin\Debug\net8.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll
+D:\_Programming\ProjectManagementSite\backend\Application.Tests\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\_Programming\ProjectManagementSite\backend\Application.Tests\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\_Programming\ProjectManagementSite\backend\Application.Tests\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+D:\_Programming\ProjectManagementSite\backend\Application.Tests\bin\Debug\net8.0\StackExchange.Redis.dll

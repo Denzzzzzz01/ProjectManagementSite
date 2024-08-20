@@ -5,6 +5,9 @@ using ProjectManagement.Application.Contracts.Project;
 using ProjectManagement.Application.Services;
 using ProjectManagement.Core.Models;
 using ProjectManagement.Infrastructure.Persistence;
+using Microsoft.Extensions.Caching.Distributed;
+
+namespace Application.Tests;
 
 public class ProjectServiceTests
 {
@@ -38,14 +41,24 @@ public class ProjectServiceTests
         using (var context = new AppDbContext(options))
         {
             var mockLogger = new Mock<ILogger<ProjectService>>();
-            var service = new ProjectService(context, mockLogger.Object);
+            var mockCache = new Mock<ICacheService>();
+            var service = new ProjectService(context, mockLogger.Object, mockCache.Object);
 
-             
+            mockCache
+                .Setup(x => x.GetAsync<List<ProjectVm>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((List<ProjectVm>)null);
+
+            mockCache
+                .Setup(x => x.SetAsync(It.IsAny<string>(), It.IsAny<List<ProjectVm>>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
             // Act
             var projects = await service.GetUserProjects(appUser);
 
             // Assert
             Assert.Equal(2, projects.Count);
+            mockCache.Verify(x => x.GetAsync<List<ProjectVm>>(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            mockCache.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<List<ProjectVm>>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 
@@ -73,7 +86,16 @@ public class ProjectServiceTests
         using (var context = new AppDbContext(options))
         {
             var mockLogger = new Mock<ILogger<ProjectService>>();
-            var service = new ProjectService(context, mockLogger.Object);
+            var mockCache = new Mock<ICacheService>();
+            var service = new ProjectService(context, mockLogger.Object, mockCache.Object);
+
+            mockCache
+                .Setup(x => x.GetAsync<ProjectDetailedVm>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((ProjectDetailedVm)null);
+
+            mockCache
+                .Setup(x => x.SetAsync(It.IsAny<string>(), It.IsAny<ProjectDetailedVm>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
 
             // Act
             var project = await service.GetProjectById(projectId, appUser);
@@ -81,6 +103,8 @@ public class ProjectServiceTests
             // Assert
             Assert.NotNull(project);
             Assert.Equal(projectId, project.Id);
+            mockCache.Verify(x => x.GetAsync<ProjectDetailedVm>(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            mockCache.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<ProjectDetailedVm>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 
@@ -93,9 +117,10 @@ public class ProjectServiceTests
             .Options;
 
         var appUser = new AppUser { Id = Guid.NewGuid() };
-        var createProjectDto = new CreateProjectDto { Name = "New Project" };
+        var createProjectDto = new CreateProjectDto { Name = "New Project", Description = "Description" };
 
         var loggerMock = new Mock<ILogger<ProjectService>>();
+        var mockCache = new Mock<ICacheService>();
         using (var context = new AppDbContext(options))
         {
             context.Users.Add(appUser);
@@ -104,7 +129,11 @@ public class ProjectServiceTests
 
         using (var context = new AppDbContext(options))
         {
-            var service = new ProjectService(context, loggerMock.Object);
+            var service = new ProjectService(context, loggerMock.Object, mockCache.Object);
+
+            mockCache
+                .Setup(x => x.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
 
             // Act
             var result = await service.CreateProject(createProjectDto, appUser);
@@ -112,6 +141,7 @@ public class ProjectServiceTests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(createProjectDto.Name, result.Name);
+            mockCache.Verify(x => x.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }
